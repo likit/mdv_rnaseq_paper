@@ -24,3 +24,28 @@ merge-bams:
 		line7u_pe/"$chr".bam line7u_se/"$chr".bam \
 		line7i_pe/"$chr".bam line7i_se/"$chr".bam; \
 	done
+
+run-velveth-local:
+	cd tophat/merged; \
+	for f in *.bam; \
+		do qsub -v outdir=$$(basename "$$f" .bam),input="$$f" ../../protocols/velveth_local_job.sh; \
+	done
+
+run-velvetg-local:
+	cd tophat/merged; \
+	for d in chr*_*; \
+		do qsub -v indir="$$d" ../../protocols/velvetg_local_job.sh; \
+	done
+
+run-oases-local:
+	cd tophat/merged; \
+	for d in chr*_*; \
+		do qsub -v indir="$$d" ../../protocols/oases_local_job.sh; \
+	done
+
+combine-transcripts:
+
+	cd tophat/merged; \
+		for d in chr*_[0-9][0-9]; \
+			do python ~/gimme/src/utils/rename_fasta.py $$d/transcripts.fa local_$$d >> local_merged.fa; \
+	done
