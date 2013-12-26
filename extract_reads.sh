@@ -25,9 +25,9 @@ then
     for chr in $(cat "$2")
     do
         printf "\textracting reads for %s..." "$chr" >&2
-        samtools view -o "$outdir"/"$chr".sam "$1" "$chr"
+        samtools view -b -o "$outdir"/"$chr".bam "$1" "$chr"
         printf "done.\n" >&2
     done
 else
-    samtools view -o "$outdir"/"reads".sam "$1"
+    samtools view -b -o "$outdir"/"reads".bam "$1"
 fi
