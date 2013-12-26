@@ -15,3 +15,12 @@ extract-reads:
 	cd tophat; for dir in line??_?e; \
 		do ../protocols/extract_reads.sh $$dir/accepted_hits.bam chromosomes.txt; \
 	done
+
+merge-bams:
+	for chr in $(cat chromosomes.txt); do printf "merging %s..\n" "$chr";  \
+		samtools merge -n merged/"$chr".bam \
+		line6u_pe/"$chr".bam line6u_se/"$chr".bam \
+		line6i_pe/"$chr".bam line6i_se/"$chr".bam \
+		line7u_pe/"$chr".bam line7u_se/"$chr".bam \
+		line7i_pe/"$chr".bam line7i_se/"$chr".bam; \
+	done
