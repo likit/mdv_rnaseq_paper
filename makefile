@@ -49,3 +49,19 @@ combine-transcripts:
 		for d in chr*_[0-9][0-9]; \
 			do python ~/gimme/src/utils/rename_fasta.py $$d/transcripts.fa local_$$d >> local_merged.fa; \
 	done
+
+	cd assembly; \
+		for d in global_[0-9][0-9]; \
+			do python ~/gimme/src/utils/rename_fasta.py $$d/transcripts.fa global_$$d >> global_merged.fa; \
+	done
+
+clean-transcripts:
+	cd tophat/merged; ~/seqclean-x86_64/seqclean local_merged.fa
+	cd assembly; ~/seqclean-x86_64/seqclean global_merged.fa
+
+remove-redundant-seq:
+	cat tophat/merged/local_merged.fa.clean assembly/global_merged.fa.clean >> all.fa.clean
+	qsub protocols/cdhit.sh
+
+align-transcripts:
+	qsub protocols/blat_job.sh
