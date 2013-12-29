@@ -64,4 +64,7 @@ remove-redundant-seq:
 	qsub protocols/cdhit.sh
 
 align-transcripts:
-	qsub protocols/blat_job.sh
+	python protocols/split-fa.py all.fa.clean.nr
+	for f in subsets*.fa; do \
+		qsub -v input="$$f" protocols/blat_job.sh; \
+	done
