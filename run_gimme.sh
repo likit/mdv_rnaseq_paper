@@ -8,5 +8,5 @@ module load bxPython
 module load pygr
 module load matplotlib
 
-cd /mnt/ls12/preeyanon/gal4models_new
+cd ${PBS_O_WORKDIR}
 python ~/gimme/src/gimme.py -r ${ref} ${input} > ${input}.bed 2>${input}.gimme.log
