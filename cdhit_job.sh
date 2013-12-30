@@ -4,7 +4,7 @@
 #PBS -m abe
 #PBS -N CDHIT_${PBS_JOBID}
 
-export PATH=$PATH:/opt/software/CDHIT/4.5.6--GCC-4.4.5
+module load CDHIT/4.5.6
 
 cd ${PBS_O_WORKDIR}
-cd-hit-est -T 4 -d 0 -c 1.0 -M 24000 -i all.fa.clean -o all.fa.clean.nr
+cd-hit-est -T 4 -d 0 -c ${c} -M 24000 -i ${input} -o ${output}
