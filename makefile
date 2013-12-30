@@ -68,3 +68,11 @@ align-transcripts:
 	for f in subsets*.fa; do \
 		qsub -v input="$$f" protocols/blat_job.sh; \
 	done
+	cat subsets*.fa.psl > all.fa.clean.nr.psl
+	sort -k 10 all.fa.clean.nr.psl > all.fa.clean.nr.psl.sorted
+	pslReps -nohead -singleHit all.fa.clean.nr.psl.sorted all.fa.clean.nr.psl.best info
+	rm subsets*.fa.psl
+	rm subsets*.fa
+
+build-gene-models:
+	qsub -v input="all.fa.clean.nr.psl.best",ref="tophat/gal4selected.fa" protocols/run_gimme.sh
