@@ -129,5 +129,44 @@ rsem-gimme-models:
 
 filter-low-isopct:
 
-	python protocol/filter-low-isopct.py 1.0 asm_cuff_models.bed *isoforms.results > asm_cuff_models.hiabund.bed
-	python protocol/filter-low-isopct.py 1.0 asm_cuff_models.nr99.bed *isoforms.results > asm_cuff_models.nr99.hiabund.bed
+	python protocol/filter-low-isopct.py 1.0 asm_cuff_models.bed *isoforms.results > asm_cuff_models.flt.bed
+
+ebseq-line6:
+
+	rsem-generate-data-matrix line6u-single-rsem-full.genes.results \
+		line6u-paired-rsem-full.genes.results line6i-single-rsem-full.genes.results \
+		line6i-paired-rsem-full.genes.results > line6u_vs_i.gene.counts.matrix
+	rsem-run-ebseq line6u_vs_i.gene.counts.matrix 2,2 line6u_vs_i.degenes
+	rsem-control-fdr line6u_vs_i.degenes 0.05 line6u_vs_i.degenes.fdr.05
+
+ebseq-line7:
+
+	rsem-generate-data-matrix line7u-single-rsem-full.genes.results \
+		line7u-paired-rsem-full.genes.results line7i-single-rsem-full.genes.results \
+		line7i-paired-rsem-full.genes.results > line7u_vs_i.gene.counts.matrix
+	rsem-run-ebseq line7u_vs_i.gene.counts.matrix 2,2 line7u_vs_i.degenes
+	rsem-control-fdr line7u_vs_i.degenes 0.05 line7u_vs_i.degenes.fdr.05
+
+translate-degenes:
+
+	#estscan -t line6u_vs_i.degenes.fdr.05.fa.prot -M protocol/gallus.hm line6u_vs_i.degenes.fdr.05.fa > line6u_vs_i.degenes.fdr.05.fa.nucl
+	estscan -t line7u_vs_i.degenes.fdr.05.fa.prot -M protocol/gallus.hm line7u_vs_i.degenes.fdr.05.fa > line7u_vs_i.degenes.fdr.05.fa.nucl
+
+get_longest_sequences:
+	python protocol/gene-rep.py line6u_vs_i.degenes.fdr.05.fa > line6u_vs_i.degenes.fdr.05.fa.longest
+	python protocol/gene-rep.py line7u_vs_i.degenes.fdr.05.fa > line7u_vs_i.degenes.fdr.05.fa.longest
+	python protocol/gene-rep.py line6u_vs_i.degenes.fdr.05.fa.prot > line6u_vs_i.degenes.fdr.05.fa.prot.longest
+	python protocol/gene-rep.py line7u_vs_i.degenes.fdr.05.fa.prot > line7u_vs_i.degenes.fdr.05.fa.prot.longest
+
+split_sequences:
+
+	python protocol/split-fa.py line6u_vs_i.degenes.fdr.05.fa.prot.longest 100 line6u_vs_i.degenes.fdr.05.fa.prot.longest
+	python protocol/split-fa.py line7u_vs_i.degenes.fdr.05.fa.prot.longest 100 line7u_vs_i.degenes.fdr.05.fa.prot.longest
+
+run-blastp:
+
+	for f in *prot.longest*.fa; do \
+		qsub -v input="$$f",program="blastp" protocol/blast.sh; \
+	done
+
+run-blastx:
