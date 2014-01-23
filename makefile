@@ -170,3 +170,15 @@ run-blastp:
 	done
 
 run-blastx:
+
+run-interpro:
+
+	cd interpro; \
+		for f in ../*prot*longest*fa; do \
+			qsub -v input="$$f" ../protocol/iprscan.sh; \
+		done
+
+run-blast2go:
+
+	qsub -v input="line7u_vs_i.degenes.fdr.05.fa.prot.longest.fa.xml",outdir="line7u_blast2go_outdir" protocol/b2g_job.sh
+	qsub -v input="line6u_vs_i.degenes.fdr.05.fa.prot.longest.fa.xml",outdir="line6u_blast2go_outdir" protocol/b2g_job.sh
