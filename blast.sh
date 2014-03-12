@@ -8,5 +8,4 @@ module load BLAST
 cd ${PBS_O_WORKDIR} 
 
 export BLASTDB=/mnt/ls12/preeyanon/blastdb
-
-blastall -p ${program} -b 20 -v 20  -e 0.001 -m 7 -d nr -i ${input} -o ${input}.xml
+blastall -p ${program} -b 20 -v 20  -e 0.001 -m 7 -d ${db} -i ${input} -o ${output}
