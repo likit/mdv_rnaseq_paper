@@ -1,3 +1,50 @@
+###############################################
+##### De novo assembly with Velvet+OasesM #####
+###############################################
+
+run-quality-trim-pe:
+
+	qsub -v left="reads/line7u.pe.1,right=reads/line7u.pe.2" protocol/quality_trim_pe_job.sh
+	qsub -v left="reads/line7i.pe.1,right=reads/line7i.pe.2" protocol/quality_trim_pe_job.sh
+	qsub -v left="reads/line6u.pe.1,right=reads/line6u.pe.2" protocol/quality_trim_pe_job.sh
+	qsub -v left="reads/line6i.pe.1,right=reads/line6i.pe.2" protocol/quality_trim_pe_job.sh
+
+run-quality-trim-se:
+
+	for r in reads/*.se.fq; do qsub -v input="$$r" protocol/quality_trim_se_job.sh; done
+
+interleave-reads:
+
+	cd assembly; ~/velvet_1.2.03/shuffleSequences_fastq.pl pe.1.fastq pe.2.fastq paired.fastq
+
+run-velveth:
+
+	cd assembly; qsub -v pe_input="paired.fastq",se_input="single.fastq" ~/rnaseq-comp-protocol/velveth_job.sh
+
+run-velvetg:
+
+	cd assembly; qsub ~/rnaseq-comp-protocol/velvetg_job.sh
+
+run-oases:
+
+	cd assembly; qsub ~/rnaseq-comp-protocol/oases_job.sh
+
+run-oasesM:
+
+	cd assembly; qsub ~/rnaseq-comp-protocol/velvethM_job.sh
+	cd assembly; qsub ~/rnaseq-comp-protocol/velvetgM_job.sh
+	cd assembly; qsub ~/rnaseq-comp-protocol/oasesM_job.sh
+
+clean-transcripts:
+
+	# -A needed to keep poly-A tail
+	cd assembly/global_merged; ~/seqclean-x86_64/seqclean transcripts.fa -c 8 -A -o transcripts.fa.clean
+	qsub -v input="assembly/global_merged/transcripts.fa.clean",output="assembly/global_merged/transcripts.fa.clean.nr",c="1.0" protocol/cdhit_job.sh
+
+###############################################
+###### Local assembly with Velvet+Oases #######
+###############################################
+
 local-assembly: run-tophat-pe run-tophat-se extract-reads
 run-tophat-pe:
 	cd tophat; qsub -v outdir="line6u_pe",index="gal4selected",left="../reads/line6u.1_trim1.fastq",right="../reads/line6u.1_trim2.fastq",unpaired="../reads/line6u.1_trim_unpaired.fastq" ~/mdv-protocol/tophat_pe_job.sh 
