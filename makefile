@@ -1,5 +1,5 @@
 ###############################################
-##### De novo assembly with Velvet+OasesM #####
+##### De novo assembly with Velvet+Oases ######
 ###############################################
 
 run-quality-trim-pe:
@@ -29,12 +29,6 @@ run-oases:
 
 	cd assembly; qsub ~/rnaseq-comp-protocol/oases_job.sh
 
-run-oasesM:
-
-	cd assembly; qsub ~/rnaseq-comp-protocol/velvethM_job.sh
-	cd assembly; qsub ~/rnaseq-comp-protocol/velvetgM_job.sh
-	cd assembly; qsub ~/rnaseq-comp-protocol/oasesM_job.sh
-
 clean-transcripts:
 
 	# -A needed to keep poly-A tail
@@ -47,23 +41,27 @@ clean-transcripts:
 
 local-assembly: run-tophat-pe run-tophat-se extract-reads
 run-tophat-pe:
+
 	cd tophat; qsub -v outdir="line6u_pe",index="gal4selected",left="../reads/line6u.1_trim1.fastq",right="../reads/line6u.1_trim2.fastq",unpaired="../reads/line6u.1_trim_unpaired.fastq" ~/mdv-protocol/tophat_pe_job.sh 
 	cd tophat; qsub -v outdir="line6i_pe",index="gal4selected",left="../reads/line6i.1_trim1.fastq",right="../reads/line6i.1_trim2.fastq",unpaired="../reads/line6i.1_trim_unpaired.fastq" ~/mdv-protocol/tophat_pe_job.sh 
 	cd tophat; qsub -v outdir="line7u_pe",index="gal4selected",left="../reads/line7u.1_trim1.fastq",right="../reads/line7u.1_trim2.fastq",unpaired="../reads/line7u.1_trim_unpaired.fastq" ~/mdv-protocol/tophat_pe_job.sh 
 	cd tophat; qsub -v outdir="line7i_pe",index="gal4selected",left="../reads/line7i.1_trim1.fastq",right="../reads/line7i.1_trim2.fastq",unpaired="../reads/line7i.1_trim_unpaired.fastq" ~/mdv-protocol/tophat_pe_job.sh 
 
 run-tophat-se:
+
 	cd tophat; qsub -v outdir="line6u_se",index="gal4selected",input="../reads/line6u.fq_trim.fastq" ~/mdv-protocol/tophat_se_job.sh
 	cd tophat; qsub -v outdir="line6i_se",index="gal4selected",input="../reads/line6i.fq_trim.fastq" ~/mdv-protocol/tophat_se_job.sh
 	cd tophat; qsub -v outdir="line7u_se",index="gal4selected",input="../reads/line7u.fq_trim.fastq" ~/mdv-protocol/tophat_se_job.sh
 	cd tophat; qsub -v outdir="line7i_se",index="gal4selected",input="../reads/line7i.fq_trim.fastq" ~/mdv-protocol/tophat_se_job.sh
 
 extract-reads:
+
 	cd tophat; for dir in line??_?e; \
 		do ~/mdv-protocol/extract_reads.sh $$dir/accepted_hits.bam ~/mdv-protocol/chromosomes.txt; \
 	done
 
 merge-bams:
+
 	cd tophat; \
 	for chr in $(cat ~/mdv-protocol/chromosomes.txt); do printf "merging %s..\n" "$chr";  \
 		samtools merge -n merged/"$chr".bam \
@@ -74,18 +72,21 @@ merge-bams:
 	done
 
 run-velveth-local:
+
 	cd tophat/merged; \
 	for f in *.bam; \
 		do qsub -v outdir=$$(basename "$$f" .bam),input="$$f" ~/mdv-protocol/velveth_local_job.sh; \
 	done
 
 run-velvetg-local:
+
 	cd tophat/merged; \
 	for d in chr*_*; \
 		do qsub -v indir="$$d" ~/mdv-protocol/velvetg_local_job.sh; \
 	done
 
 run-oases-local:
+
 	cd tophat/merged; \
 	for d in chr*_*; \
 		do qsub -v indir="$$d" ~/mdv-protocol/oases_local_job.sh; \
