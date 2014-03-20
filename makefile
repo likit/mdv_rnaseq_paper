@@ -136,25 +136,6 @@ build-gene-models-with-cufflinks-ref:
 	python ~/gimme/src/utils/gff2bed.py tophat/merged_cuff_ref/merged.gtf > tophat/merged_cuff_ref/merged.bed
 	qsub -v output="asm_cuff_ref_models.bed",input1="all.fa.clean.nr.psl.best",input2="tophat/merged_cuff_ref/merged.bed",ref="tophat/gal4selected.fa" ~/mdv-protocol/run_gimme2.sh
 
-rsem-gimme-models:
-
-	cat asm_cuff_models.bed.fa | python ~/mdv-protocol/fasta-to-gene-list.py > asm_cuff_models.txt
-	qsub -v list="asm_cuff_models.txt",input="asm_cuff_models.bed.fa",sample="asm_cuff_models_rsem" ~/mdv-protocol/rsem_prepare_reference.sh
-
-	qsub -v input_read="reads/line6u.se.fq",sample_name="line6u-single-rsem-full",index="asm_cuff_models_rsem" \
-		~/mdv-protocol/rsem_calculate_expr_single.sh
-	qsub -v input_read="reads/line6i.se.fq",sample_name="line6i-single-rsem-full",index="asm_cuff_models_rsem" \
-		~/mdv-protocol/rsem_calculate_expr_single.sh
-	qsub -v input_read="reads/line7u.se.fq",sample_name="line7u-single-rsem-full",index="asm_cuff_models_rsem" \
-		~/mdv-protocol/rsem_calculate_expr_single.sh
-	qsub -v input_read="reads/line7i.se.fq",sample_name="line7i-single-rsem-full",index="asm_cuff_models_rsem" \
-		~/mdv-protocol/rsem_calculate_expr_single.sh
-
-	qsub -v input_read1="reads/line6u.pe.1",input_read2="reads/line6u.pe.2",sample_name="line6u-paired-rsem-full",index="asm_cuff_models_rsem" ~/mdv-protocol/rsem_calculate_expr_paired.sh
-	qsub -v input_read1="reads/line6i.pe.1",input_read2="reads/line6i.pe.2",sample_name="line6i-paired-rsem-full",index="asm_cuff_models_rsem" ~/mdv-protocol/rsem_calculate_expr_paired.sh
-	qsub -v input_read1="reads/line7u.pe.1",input_read2="reads/line7u.pe.2",sample_name="line7u-paired-rsem-full",index="asm_cuff_models_rsem" ~/mdv-protocol/rsem_calculate_expr_paired.sh
-	qsub -v input_read1="reads/line7i.pe.1",input_read2="reads/line7i.pe.2",sample_name="line7i-paired-rsem-full",index="asm_cuff_models_rsem" ~/mdv-protocol/rsem_calculate_expr_paired.sh
-
 models-to-transcripts:
 
 	python ~/gimme/src/utils/get_transcript_seq.py asm_cuff_ref_models.bed tophat/gal4selected.fa | sed 1d > asm_cuff_ref_models.bed.fa
@@ -199,22 +180,6 @@ filter-low-isopct:
 
 	python ~/mdv-protocol/filter-low-isopct.py 1.0 asm_cuff_models.bed *isoforms.results > asm_cuff_models.flt.bed
 
-ebseq-line6:
-
-	rsem-generate-data-matrix line6u-single-rsem-full.genes.results \
-		line6u-paired-rsem-full.genes.results line6i-single-rsem-full.genes.results \
-		line6i-paired-rsem-full.genes.results > line6u_vs_i.gene.counts.matrix
-	rsem-run-ebseq line6u_vs_i.gene.counts.matrix 2,2 line6u_vs_i.degenes
-	rsem-control-fdr line6u_vs_i.degenes 0.05 line6u_vs_i.degenes.fdr.05
-
-ebseq-line7:
-
-	rsem-generate-data-matrix line7u-single-rsem-full.genes.results \
-		line7u-paired-rsem-full.genes.results line7i-single-rsem-full.genes.results \
-		line7i-paired-rsem-full.genes.results > line7u_vs_i.gene.counts.matrix
-	rsem-run-ebseq line7u_vs_i.gene.counts.matrix 2,2 line7u_vs_i.degenes
-	rsem-control-fdr line7u_vs_i.degenes 0.05 line7u_vs_i.degenes.fdr.05
-
 translate-degenes:
 
 	estscan -t line6u_vs_i.degenes.fdr.05.fa.prot -M ~/mdv-protocol/gallus.hm line6u_vs_i.degenes.fdr.05.fa > line6u_vs_i.degenes.fdr.05.fa.nucl
@@ -226,3 +191,10 @@ get_longest_sequences:
 	python ~/mdv-protocol/gene-rep.py line7u_vs_i.degenes.fdr.05.fa > line7u_vs_i.degenes.fdr.05.fa.longest
 	python ~/mdv-protocol/gene-rep.py line6u_vs_i.degenes.fdr.05.fa.prot > line6u_vs_i.degenes.fdr.05.fa.prot.longest
 	python ~/mdv-protocol/gene-rep.py line7u_vs_i.degenes.fdr.05.fa.prot > line7u_vs_i.degenes.fdr.05.fa.prot.longest
+
+##TODO
+
+# run ebseq-line6-models-ref
+# run blast-model-ref if necessary
+# run filter-low-isopct
+# run MISO
