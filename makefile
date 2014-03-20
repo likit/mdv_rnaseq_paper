@@ -130,30 +130,11 @@ run-cufflinks:
 run-cuffmerge-ref:
 
 	cd tophat; cuffmerge -g ../Gallus_UCSC_ensembl_73.gtf.removed -o merged_cuff_ref -s gal4selected.fa -p 4 ~/mdv-protocol/merge_list.txt
-build-gene-models:
-
-	qsub -v input="all.fa.clean.nr.psl.best",ref="tophat/gal4selected.fa" ~/mdv-protocol/run_gimme.sh
-
-build-gene-models-with-cufflinks:
-
-	python ~/gimme/src/utils/gff2bed.py tophat/merged_cuff_denovo/transcripts.gtf > tophat/merged_cuff_denovo/transcripts.bed
-	qsub -v input1="all.fa.clean.nr.psl.best",input2="tophat/merged_cuff_denovo/transcripts.bed",ref="tophat/gal4selected.fa" ~/mdv-protocol/run_gimme2.sh
 
 build-gene-models-with-cufflinks-ref:
 
 	python ~/gimme/src/utils/gff2bed.py tophat/merged_cuff_ref/merged.gtf > tophat/merged_cuff_ref/merged.bed
 	qsub -v output="asm_cuff_ref_models.bed",input1="all.fa.clean.nr.psl.best",input2="tophat/merged_cuff_ref/merged.bed",ref="tophat/gal4selected.fa" ~/mdv-protocol/run_gimme2.sh
-
-clean-gene-models:
-
-	sed 1d all.fa.clean.nr.psl.best.bed > asm_models.bed
-	sed 1d all.fa.clean.nr.psl.best.merged.bed > asm_cuff_models.bed
-	python ~/gimme/src/utils/get_transcript_seq.py asm_models.bed tophat/gal4selected.fa | sed 1d > asm_models.bed.fa
-	python ~/gimme/src/utils/get_transcript_seq.py asm_cuff_models.bed tophat/gal4selected.fa | sed 1d > asm_cuff_models.bed.fa
-	qsub -v input="asm_models.bed.fa",output="asm_models.bed.fa.nr99",c="0.99" ~/mdv-protocol/cdhit_job.sh
-	qsub -v input="asm_cuff_models.bed.fa",output="asm_cuff_models.bed.fa.nr99",c="0.99" ~/mdv-protocol/cdhit_job.sh
-	python ~/gimme/src/utils/cdhit_transcript.py asm_models.bed asm_models.bed.fa.nr99 > asm_models.nr99.bed
-	python ~/gimme/src/utils/cdhit_transcript.py asm_cuff_models.bed asm_cuff_models.bed.fa.nr99 > asm_cuff_models.nr99.bed
 
 rsem-gimme-models:
 
