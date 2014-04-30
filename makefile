@@ -224,9 +224,12 @@ run-blast-models-ref:
 	qsub -v db="Gallus_prot",input="line6u_vs_i.cuffref.degenes.fdr.05.fa.longest",program="blastx",output="line6u_vs_i.cuffref.degenes.fdr.05.fa.nucl.longest.gallus.v2.xml" ~/mdv-protocol/blast.sh
 	#qsub -v db="Gallus_prot",input="line7u_vs_i.cuffref.degenes.fdr.05.fa.longest",program="blastx",output="line7u_vs_i.cuffref.degenes.fdr.05.fa.nucl.longest.gallus.xml" ~/mdv-protocol/blast.sh
 
-##TODO
+get-tophits:
 
-# run ebseq-line6-models-ref
-# run blast-model-ref if necessary
-# run filter-low-isopct
-# run MISO
+	python protocol/get_top_hits.py line6u_vs_i.cuffref.degenes.fdr.05.fa.nucl.longest.gallus.xml \
+		> line6u_vs_i.cuffref.degenes.fdr.05.fa.nucl.tophits.xml
+
+	#python protocol/get_top_hits.py line7u_vs_i.cuffref.degenes.fdr.05.fa.nucl.longest.gallus.xml \
+	#	> line7u_vs_i.cuffref.degenes.fdr.05.fa.nucl.tophits.xml
+
+##TODO
