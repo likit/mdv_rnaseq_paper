@@ -201,9 +201,12 @@ get_longest_sequences:
 	python ~/mdv-protocol/gene-rep.py line6u_vs_i.degenes.fdr.05.fa.prot > line6u_vs_i.degenes.fdr.05.fa.prot.longest
 	python ~/mdv-protocol/gene-rep.py line7u_vs_i.degenes.fdr.05.fa.prot > line7u_vs_i.degenes.fdr.05.fa.prot.longest
 
-##TODO
+get-tophits:
 
-# run ebseq-line6-models-ref
-# run blast-model-ref if necessary
-# run filter-low-isopct
-# run MISO
+	python protocol/get_top_hits.py line6u_vs_i.cuffref.degenes.fdr.05.fa.nucl.longest.gallus.xml \
+		> line6u_vs_i.cuffref.degenes.fdr.05.fa.nucl.tophits.xml
+
+	#python protocol/get_top_hits.py line7u_vs_i.cuffref.degenes.fdr.05.fa.nucl.longest.gallus.xml \
+	#	> line7u_vs_i.cuffref.degenes.fdr.05.fa.nucl.tophits.xml
+
+##TODO
