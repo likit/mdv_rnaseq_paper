@@ -204,9 +204,9 @@ get_longest_sequences:
 get-tophits:
 
 	python protocol/get_top_hits.py line6u_vs_i.cuffref.degenes.fdr.05.fa.nucl.longest.gallus.xml \
-		> line6u_vs_i.cuffref.degenes.fdr.05.fa.nucl.tophits.xml
+		> line6u_vs_i.cuffref.degenes.fdr.05.fa.nucl.tophits.txt
 
 	#python protocol/get_top_hits.py line7u_vs_i.cuffref.degenes.fdr.05.fa.nucl.longest.gallus.xml \
-	#	> line7u_vs_i.cuffref.degenes.fdr.05.fa.nucl.tophits.xml
+	#	> line7u_vs_i.cuffref.degenes.fdr.05.fa.nucl.tophits.txt
 
 ##TODO
