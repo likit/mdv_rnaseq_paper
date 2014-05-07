@@ -3,6 +3,7 @@ library(org.Gg.eg.db)
 library(KEGG.db)
 library(ggplot2)
 library(biomaRt)
+library(GO.db)
 
 degenes.table<-read.table(
   'line6u_vs_i.cuffref.degenes.fdr.05.fa.nucl.tophits.txt',
@@ -26,28 +27,31 @@ mart<-useMart(biomart="ensembl", dataset="ggallus_gene_ensembl")
 allgenes<-getBM(attributes='ensembl_gene_id', mart=mart)
 allgenes<-allgenes$ensembl_gene_id
 
+#write.table(uniq.annotated.degenes$geneID,
+#            'lin6u_vs_i.uniq.annot.degenes.txt', sep='\t', quote=F)
+
 gene.vector<-as.integer(allgenes%in%uniq.annotated.degenes$geneID)
 names(gene.vector)<-allgenes
 
 pwf=nullp(gene.vector, 'galGal4', 'ensGene')
 
-cat("KEGG pathway analysis..\n")
+cat("MF pathway analysis..\n")
 # KEGG Pathway analysis
-KEGG = goseq(pwf, "galGal4", "ensGene", test.cats="KEGG")
+MF = goseq(pwf, "galGal4", "ensGene", test.cats="GO:MF")
 
 # Adjust P-value using BH method
-KEGG$padjust = p.adjust(KEGG$over_represented_pvalue, method="BH")
+MF$padjust = p.adjust(MF$over_represented_pvalue, method="BH")
 
 # Get pathway names for significant patways
-KEGG_SIG = KEGG[KEGG$padjust<0.25,]
-pathway = stack(mget(KEGG[KEGG$padjust<0.25,]$category, KEGGPATHID2NAME))
-KEGG_SIG$pathway = pathway$values
+MF_SIG = MF[MF$padjust<0.05,]
+terms = stack(lapply(mget(MF[MF$padjust<0.05,]$category, GOTERM), Term))
+MF_SIG$terms = terms$values
 xx = as.list(org.Gg.egPATH2EG)
-xx = xx[!is.na(xx)] # remove KEGG IDs that do not match any gene
+xx = xx[!is.na(xx)] # remove MF IDs that do not match any gene
 
 cat("Writing genes to files..\n")
 # Write genes in each pathway to separate files
-get_genes_kegg = function(cat, data, prefix)
+get_genes_MF = function(cat, data, prefix)
 {
     m = match(xx[[cat]], data$ENTREZID)
     mm = m[!is.na(m)]
@@ -57,13 +61,13 @@ get_genes_kegg = function(cat, data, prefix)
     write.table(d, filename, sep="\t", row.names=F, col.names=F, quote=F)
     return(d)
 }
-df = lapply(KEGG_SIG$category, get_genes_kegg,
-            uniq.annotated.degenes, "line6_goseq_KEGG_genes")
+df = lapply(MF_SIG$category, get_genes_MF,
+            uniq.annotated.degenes, "line6_goseq_MF_genes")
 
 # Get number of genes in each pathway
-#KEGG_SIG$ngenes = sapply(df, nrow) # get a number of genes from each category
+#MF_SIG$ngenes = sapply(df, nrow) # get a number of genes from each category
 
 # Writing pathway information to a file
 cat("Writing pathways' info to a file...\n")
-write.table(KEGG_SIG, 'line6u_vs_i.degenes.KEGG.txt', sep='\t',
-            row.names=F, quote=F)
+write.table(MF_SIG, 'line6u_vs_i.degenes.MF.txt',
+                          sep='\t', row.names=F, quote=F)

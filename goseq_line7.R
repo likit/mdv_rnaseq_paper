@@ -26,7 +26,7 @@ mart<-useMart(biomart="ensembl", dataset="ggallus_gene_ensembl")
 allgenes<-getBM(attributes='ensembl_gene_id', mart=mart)
 allgenes<-allgenes$ensembl_gene_id
 
-gene.vector<-as.integer(allgenes%in%degenes.table$geneID)
+gene.vector<-as.integer(allgenes%in%uniq.annotated.degenes$geneID)
 names(gene.vector)<-allgenes
 
 pwf=nullp(gene.vector, 'galGal4', 'ensGene')
@@ -39,11 +39,11 @@ KEGG = goseq(pwf, "galGal4", "ensGene", test.cats="KEGG")
 KEGG$padjust = p.adjust(KEGG$over_represented_pvalue, method="BH")
 
 # Get pathway names for significant patways
-KEGG_SIG = KEGG[KEGG$padjust<0.05,]
-pathway = stack(mget(KEGG[KEGG$padjust<0.05,]$category, KEGGPATHID2NAME))
+KEGG_SIG = KEGG[KEGG$padjust<0.25,]
+pathway = stack(mget(KEGG[KEGG$padjust<0.25,]$category, KEGGPATHID2NAME))
 KEGG_SIG$pathway = pathway$values
 xx = as.list(org.Gg.egPATH2EG)
-head(xx)
+
 xx = xx[!is.na(xx)] # remove KEGG IDs that do not match any gene
 
 cat("Writing genes to files..\n")
@@ -66,21 +66,5 @@ df = lapply(KEGG_SIG$category, get_genes_kegg, uniq.annotated.degenes,
 
 # Writing pathway information to a file
 cat("Writing pathways' info to a file...\n")
-write.table(KEGG_SIG, 'line7u_vs_i.cuffref.degenes.KEGG.txt', sep='\t', row.names=F, quote=F)
+write.table(KEGG_SIG, 'line7u_vs_i.degenes.KEGG.txt', sep='\t', row.names=F, quote=F)
 
-# Cleveland plot
-#cat("Plotting...\n")
-#KEGG_SIG$log10padjust=(-1)*log10(KEGG_SIG$padjust)
-#nameorder = KEGG_SIG$pathway[sort.list(KEGG_SIG$log10padjust, decreasing=F)]
-#KEGG_SIG$pathway = factor(KEGG_SIG$pathway, levels=nameorder)
-#ggplot(KEGG_SIG, aes(x=pathway, y=log10padjust, size=ngenes)) +
-#    geom_point(colour="grey30") +
-#    theme_bw() +
-#    theme(panel.grid.major.y = element_blank(),
-#        panel.grid.minor.y=element_blank(),
-#        panel.grid.major.x=element_line(colour="grey60",
-#        linetype="dashed"), axis.text.x=element_text(angle=90, hjust=1)) +
-#    scale_size_area(max_size=14) +
-#    labs(list(title="Line 7 Post Infection", y="log10(adjusted p-value)"))
-#ggsave("line7_KEGG_cleveland_inverse.pdf")
-#cat("Done!\n")
