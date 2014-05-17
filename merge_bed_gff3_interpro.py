@@ -31,11 +31,13 @@ writer = csv.writer(sys.stdout, 'excel-tab')
 with open(sys.argv[2]) as pslfile:
     reader = csv.reader(pslfile, dialect='excel-tab')
     for line in reader:
-        id, start, end = line[9], int(line[15]), line[16]
+        id, start, end = line[9], int(line[15]), int(line[16])
+        tbase_ins = int(line[7])
+
         block_counts = line[17].strip(',')
         chrom_size = int(line[14])
 
-        # For dnax, each block size need to be multiplied by three
+        # For dnax, each block size needs to be multiplied by three
         block_sizes = [int(i) * 3 for i in line[18].split(',')[:-1]]
 
         if line[8] == '+-':
@@ -48,10 +50,14 @@ with open(sys.argv[2]) as pslfile:
         elif line[8] == '++':
             # target start must be relative to start
             tstarts = [int(i) - start for i in line[20].split(',')[:-1]]
+            if tbase_ins < 0:  # deletion
+                end += (tbase_ins * -1)
+                tstarts[-1] += 1
+
 
         input = '\t'.join(line)
         error_msg = ' '.join(map(str, [block_sizes[-1], start, tstarts[-1], end]))
-        assert int(block_sizes[-1]) + start + int(tstarts[-1]) == int(end), error_msg + '\n' + input  # sanity check
+        assert int(block_sizes[-1]) + start + int(tstarts[-1]) == end, error_msg + '\n' + input  # sanity check
 
         tstarts = ','.join([str(i) for i in tstarts])
         block_sizes = ','.join([str(i) for i in block_sizes])
