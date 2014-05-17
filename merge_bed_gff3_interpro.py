@@ -62,7 +62,7 @@ with open(sys.argv[2]) as pslfile:
         tstarts = ','.join([str(i) for i in tstarts])
         block_sizes = ','.join([str(i) for i in block_sizes])
 
-        strand = line[8][0]
+        strand = line[8][-1]
         target_name = line[13]
 
         if id in domains:
