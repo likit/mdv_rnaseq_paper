@@ -16,4 +16,5 @@ for rec in reader:
 
     seq.id = gene_id
     seq.description = strand
-    SeqIO.write(seq, sys.stdout, 'fasta')
+    SeqIO.write(seq, '%s.%s.chk.fa' %
+                (prefix, gene_id), 'fasta')
