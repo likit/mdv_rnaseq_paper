@@ -31,13 +31,13 @@ for alignment in blast_record.alignments:
 
                 if j != (i + 1):  # run-on SNPs or indels
                     print '%d...%d\t%s\t%s' % (i + 1, j + 1,
-                            hsp.query[i:j], hsp.sbjct[i:j])
+                            hsp.sbjct[i:j], hsp.query[i:j])
                     i = j
                     continue
                 else:  # a single SNP
                     # SNPs are in 1-based position
                     print '%d\t%s\t%s' % (i + 1,
-                            hsp.query[i], hsp.sbjct[i])
+                            hsp.sbjct[i], hsp.query[i])
                     i += 1
             else:  # no SNPs
                 i += 1
