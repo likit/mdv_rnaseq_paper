@@ -4,7 +4,7 @@ library(KEGG.db)
 library(ggplot2)
 library(biomaRt)
 
-degenes.table<-read.table('combined_deu_gene_ensembl.txt',
+degenes.table<-read.table('select_deu_gene_ensembl.txt',
                           stringsAsFactors=F, sep="\t", header=F)
 colnames(degenes.table)<-c("geneID", "ENSEMBL")
 mart<-useMart(biomart="ensembl", dataset="ggallus_gene_ensembl")
@@ -59,11 +59,11 @@ get_genes_kegg = function(cat, data, prefix)
   write.table(d, filename, sep="\t", row.names=F, col.names=F, quote=F)
   return(d)
 }
-df = lapply(KEGG_SIG$category, get_genes_kegg, annotated.degenes, "deu_goseq_KEGG_genes")
+df = lapply(KEGG_SIG$category, get_genes_kegg, annotated.degenes, "select_deu_goseq_KEGG_genes")
 
 #mapply(write.table, x=df, file="sample.goseq.txt",
 #        MoreArgs=list(row.names=FALSE, sep="\t", quote=FALSE,
 #        col.names=FALSE, append=TRUE))
 
 # Writing pathway information to a file
-write.table(KEGG_SIG, 'deu.combined.KEGG.txt', sep='\t', row.names=F, quote=F)
+write.table(KEGG_SIG, 'select.deu.KEGG.txt', sep='\t', row.names=F, quote=F)
