@@ -100,9 +100,9 @@ run-oases-local:
 combine-transcripts:
 
 	cd tophat/merged; \
-		for d in chr*_[0-9][0-9]; \
-			do python ~/gimme/src/utils/rename_fasta.py $$d/transcripts.fa local_$$d >> local_merged.fa; \
-done
+	for d in chr*_[0-9][0-9]; \
+		do python ~/gimme/src/utils/rename_fasta.py $$d/transcripts.fa local_$$d >> local_merged.fa; \
+	done
 
 	cd assembly; \
 	for d in global_[0-9][0-9]; \
