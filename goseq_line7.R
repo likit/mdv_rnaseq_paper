@@ -7,6 +7,9 @@ library(biomaRt)
 degenes.table<-read.table('line7u_vs_i.cuffref.degenes.fdr.05.fa.nucl.tophits.txt',
                           stringsAsFactors=F, sep="\t", header=T)
 
+# remove gene with no Ensembl ID
+degenes.table<-degenes.table[!is.na(degenes.table$geneID),]
+
 degenes.table<-degenes.table[order(degenes.table$geneID,
                           degenes.table$bits, decreasing=T),]
 
