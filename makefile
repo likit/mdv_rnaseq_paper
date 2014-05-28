@@ -206,7 +206,28 @@ get-tophits:
 	python protocol/get_top_hits.py line6u_vs_i.cuffref.degenes.fdr.05.fa.nucl.longest.gallus.xml \
 		> line6u_vs_i.cuffref.degenes.fdr.05.fa.nucl.tophits.txt
 
-	#python protocol/get_top_hits.py line7u_vs_i.cuffref.degenes.fdr.05.fa.nucl.longest.gallus.xml \
-	#	> line7u_vs_i.cuffref.degenes.fdr.05.fa.nucl.tophits.txt
+	python protocol/get_top_hits.py line7u_vs_i.cuffref.degenes.fdr.05.fa.nucl.longest.gallus.xml \
+		> line7u_vs_i.cuffref.degenes.fdr.05.fa.nucl.tophits.txt
 
-##TODO
+degenes-annotation:
+
+	R CMD BATCH protocol/degenes_annotation.R
+
+degenes-annotation-human:
+
+	R CMD BATCH protocol/degenes_annotation_human.R
+
+goseq-kegg-degenes:
+
+	#R CMD BATCH protocol/goseq_line6.R
+	R CMD BATCH protocol/goseq_line7.R
+
+goseq-kegg-deu:
+
+	R CMD BATCH protocol/goseq_deu_kegg.R
+
+goseq-BP-degenes:
+
+	#R CMD BATCH protocol/goseq_line6.R
+	R CMD BATCH protocol/goseq_BP_line7.R
+
