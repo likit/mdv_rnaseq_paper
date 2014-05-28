@@ -104,10 +104,10 @@ combine-transcripts:
 			do python ~/gimme/src/utils/rename_fasta.py $$d/transcripts.fa local_$$d >> local_merged.fa; \
 done
 
-cd assembly; \
+	cd assembly; \
 	for d in global_[0-9][0-9]; \
 		do python ~/gimme/src/utils/rename_fasta.py $$d/transcripts.fa global_$$d >> global_merged.fa; \
-done
+	done
 
 clean-transcripts:
 
@@ -119,7 +119,7 @@ remove-redundant-seq:
 	cat tophat/merged/local_merged.fa.clean assembly/global_merged.fa.clean >> all.fa.clean
 	qsub -v input="all.fa.clean",output="all.fa.clean.nr",c="1.0" ~/mdv-protocol/cdhit_job.sh
 
-cd assembly; qsub -v input="global_merged.fa.clean",output="global_merged.fa.clean.nr",c="1.0" ~/mdv-protocol/cdhit_job.sh
+	cd assembly; qsub -v input="global_merged.fa.clean",output="global_merged.fa.clean.nr",c="1.0" ~/mdv-protocol/cdhit_job.sh
 
 align-transcripts:
 
