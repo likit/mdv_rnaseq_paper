@@ -6,6 +6,7 @@ library(biomaRt)
 
 degenes.table<-read.table('select_deu_gene_ensembl.txt',
                           stringsAsFactors=F, sep="\t", header=F)
+
 colnames(degenes.table)<-c("geneID", "ENSEMBL")
 mart<-useMart(biomart="ensembl", dataset="ggallus_gene_ensembl")
 allgenes<-getBM(attributes=c('ensembl_gene_id', 'start_position',
