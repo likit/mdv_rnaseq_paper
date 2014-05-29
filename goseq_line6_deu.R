@@ -1,7 +1,6 @@
 library(goseq)
 library(org.Gg.eg.db)
 library(KEGG.db)
-library(ggplot2)
 library(biomaRt)
 
 degenes.table<-read.table('line6ui_select_deu_degenes.ensembl.txt',
@@ -27,8 +26,8 @@ KEGG = goseq(pwf, "galGal4", "ensGene", test.cats="KEGG")
 KEGG$padjust = p.adjust(KEGG$over_represented_pvalue, method="BH")
 
 # Get pathway names for significant patways
-KEGG_SIG = KEGG[KEGG$padjust<0.1,]
-pathway = stack(mget(KEGG[KEGG$padjust<0.1,]$category, KEGGPATHID2NAME))
+KEGG_SIG = KEGG[KEGG$padjust<0.5,]
+pathway = stack(mget(KEGG[KEGG$padjust<0.5,]$category, KEGGPATHID2NAME))
 KEGG_SIG$pathway = pathway$values
 xx = as.list(org.Gg.egPATH2EG)
 xx = xx[!is.na(xx)] # remove KEGG IDs that do not match any gene
