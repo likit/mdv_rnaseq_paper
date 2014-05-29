@@ -1,7 +1,6 @@
 library(goseq)
 library(org.Gg.eg.db)
 library(KEGG.db)
-library(ggplot2)
 library(biomaRt)
 
 degenes.table<-read.table('line7u_vs_i.cuffref.degenes.fdr.05.fa.nucl.tophits.txt',
@@ -34,12 +33,13 @@ KEGG = goseq(pwf, "galGal4", "ensGene", test.cats="KEGG")
 KEGG$padjust = p.adjust(KEGG$over_represented_pvalue, method="BH")
 
 # Get pathway names for significant patways
-KEGG_SIG = KEGG[KEGG$padjust<0.1,]
-pathway = stack(mget(KEGG[KEGG$padjust<0.1,]$category, KEGGPATHID2NAME))
+KEGG_SIG = KEGG[KEGG$padjust<0.5,]
+pathway = stack(mget(KEGG[KEGG$padjust<0.5,]$category, KEGGPATHID2NAME))
 KEGG_SIG$pathway = pathway$values
 xx = as.list(org.Gg.egPATH2EG)
 xx = xx[!is.na(xx)] # remove KEGG IDs that do not match any gene
 
+degenes.table.uniq$id<-rownames(degenes.table.uniq)
 annots<-select(org.Gg.eg.db, keys=degenes.table.uniq$geneID,
                columns=c("SYMBOL","ENTREZID"), keytype="ENSEMBL")
 
@@ -59,7 +59,7 @@ get_genes_kegg = function(cat, data, prefix)
 {
     m = match(xx[[cat]], data$ENTREZID)
     mm = m[!is.na(m)]
-    d = data.frame(cat, data[mm,]$geneID, data[mm,]$ENTREZID, data[mm,]$SYMBOL)
+    d = data.frame(cat, data[mm, ]$id, data[mm,]$geneID, data[mm,]$ENTREZID, data[mm,]$SYMBOL)
 
     filename = paste(prefix, cat, sep="_")
     write.table(d, filename, sep="\t", row.names=F, col.names=F, quote=F)
