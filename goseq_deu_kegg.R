@@ -1,7 +1,6 @@
 library(goseq)
 library(org.Gg.eg.db)
 library(KEGG.db)
-library(ggplot2)
 library(biomaRt)
 
 degenes.table<-read.table('select_deu_gene_ensembl.txt',
