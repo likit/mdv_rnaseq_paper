@@ -1489,22 +1489,13 @@ find-deu-snps-a5ss:
 
 degenes-annotation:
 
-	R CMD BATCH protocol/degenes_annotation.R
+	Rscript protocol/degenes_annotation.R
 
 degenes-annotation-human:
 
-	R CMD BATCH protocol/degenes_annotation_human.R
+	Rscript protocol/degenes_annotation_human.R
 
 goseq-kegg-degenes:
 
-	#R CMD BATCH protocol/goseq_line6.R
-	R CMD BATCH protocol/goseq_line7.R
-
-goseq-kegg-deu:
-
-	R CMD BATCH protocol/goseq_deu_kegg.R
-
-goseq-BP-degenes:
-
-	#R CMD BATCH protocol/goseq_line6.R
-	R CMD BATCH protocol/goseq_BP_line7.R
+	Rscript protocol/goseq_line6.R
+	Rscript protocol/goseq_line7.R

@@ -29,6 +29,9 @@ retrieve_annot<-function(input, output) {
   write.table(annotated.degenes, output, sep='\t', quote=F)
 }
 
+retrieve_annot('line6u_vs_i.cuffref.degenes.fdr.05.fa.nucl.human.tophits.txt', 'line6u_vs_i.uniq.human.annot.degenes.txt')
+retrieve_annot('line7u_vs_i.cuffref.degenes.fdr.05.fa.nucl.human.tophits.txt', 'line7u_vs_i.uniq.human.annot.degenes.txt')
+
 retrieve_annot('miso/cuffref-results/SE/comparisons/line6u_vs_line6i/bayes-factors/line6u_vs_line6i.miso_bf.flt.fa.human.tophits.txt'
                ,'miso/cuffref-results/SE/comparisons/line6u_vs_line6i/bayes-factors/line6u_vs_line6i.miso_bf.flt.fa.human.uniq.annot.miso.txt')
 retrieve_annot('miso/cuffref-results/SE/comparisons/line6u_vs_line7u/bayes-factors/line6u_vs_line7u.miso_bf.flt.fa.human.tophits.txt'
