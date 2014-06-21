@@ -1,9 +1,14 @@
+library(ggplot2)
 line7 <- read.table('line7u_vs_i.degenes.KEGG.txt',
                     sep="\t", header=T)
 line6 <- read.table('line6u_vs_i.degenes.KEGG.txt',
                     sep="\t", header=T)
 line7$sample = "Line 7"
 line6$sample = "Line 6"
+
+line6 <- line6[line6$padjust<0.1,]
+line7 <- line7[line7$padjust<0.1,]
+
 line67 <- rbind(line6, line7)
 line67$log10padjust = (-1)*log10(line67$padjust)
 ggplot(line67, aes(x=log10padjust, y=reorder(pathway, log10padjust))) +
@@ -21,4 +26,4 @@ ggplot(line67, aes(x=log10padjust, y=reorder(pathway, log10padjust))) +
             y="Pathway")) +
   guides(colour=FALSE)
 
-ggsave("line67_KEGG_cleveland.pdf")
+ggsave("line67_KEGG_cleveland_2.pdf")
