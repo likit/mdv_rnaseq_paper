@@ -24,6 +24,25 @@ At your working directory run all the following commands.
     make -f $PROTOCOL/misc.mk protocol=$PROTOCOL run-quality-trim-pe
     make -f $PROTOCOL/misc.mk protocol=$PROTOCOL run-quality-trim-se
 
+###Cufflinks
+
+Map reads to the genome using Tophat
+
+    make -f $PROTOCOL/cufflinks.mk protocol=$PROTOCOL run-tophat-pe
+    make -f $PROTOCOL/cufflinks.mk protocol=$PROTOCOL run-tophat-se
+
+Run RSEM prepare reference
+
+    make -f $PROTOCOL/cufflinks.mk prepare-reference-cufflinks
+
+Then run Cufflinks
+
+    make -f $PROTOCOL/cufflinks.mk protocol=$PROTOCOL run-cufflinks
+
+Merge gene models from all samples
+
+    make -f $PROTOCOL/cufflinks.mk protocol=$PROTOCOL run-cuffmerge-ref
+
 ###Local assembly
 
 Extract reads from each chromosome
@@ -43,25 +62,6 @@ Run Velveth, Velvetg and Oases
 Merge transcripts
 
     make -f $PROTOCOL/local_assembly.mk gimmedir=$GIMMEDIR combine-transcripts
-
-###Cufflinks
-
-Map reads to the genome using Tophat
-
-    make -f $PROTOCOL/cufflinks.mk protocol=$PROTOCOL run-tophat-pe
-    make -f $PROTOCOL/cufflinks.mk protocol=$PROTOCOL run-tophat-se
-
-Run RSEM prepare reference
-
-    make -f $PROTOCOL/cufflinks.mk prepare-reference-cufflinks
-
-Then run Cufflinks
-
-    make -f $PROTOCOL/cufflinks.mk protocol=$PROTOCOL run-cufflinks
-
-Merge gene models from all samples
-
-    make -f $PROTOCOL/cufflinks.mk protocol=$PROTOCOL run-cuffmerge-ref
 
 ###Merged models
 
