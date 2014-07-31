@@ -32,6 +32,7 @@ run_goseq<-function(gene.list) {
   ontology_sig = ontology[ontology$padjust<0.05,]
   terms = stack(lapply(mget(ontology[ontology$padjust<0.05,]$category, GOTERM), Term))
   ontology_sig$terms = terms$values
+  ontology_sig$termids = terms$ind
   return(ontology_sig)
 }
 
@@ -52,3 +53,36 @@ write.table(enriched, 'line7u_vs_i.up_genes.BP.txt', sep='\t', row.names=F, quot
 
 enriched<-run_goseq(degenes.table.uniq[which(degenes.table.uniq$FC<0.0),])
 write.table(enriched, 'line7u_vs_i.down_genes.BP.txt', sep='\t', row.names=F, quote=F)
+
+xx = as.list(org.Gg.egGO2ALLEGS)
+xx = xx[!is.na(xx)] # remove GO IDs that do not match any gene
+#degenes = temp[temp$V2>0,]$V3
+
+annots<-select(org.Gg.eg.db, keys=degenes.table.uniq$ENSEMBL,
+               columns=c("SYMBOL","ENTREZID"), keytype="ENSEMBL")
+
+annotated.degenes.table.uniq<-merge(annots, degenes.table.uniq,
+                                    by.x="ENSEMBL", by.y="ENSEMBL")
+
+# remove duplicated Entrez ID
+uniq.annotated.degenes<-annotated.degenes.table.uniq[
+  !duplicated(annotated.degenes.table.uniq$ENTREZID),]
+
+# remove gene with no Entrez ID
+uniq.annotated.degenes<-uniq.annotated.degenes[
+  !is.na(uniq.annotated.degenes$ENTREZID),]
+
+# Write genes in each pathway to separate files
+get_genes_list = function(cat, data, prefix)
+{
+  m = match(xx[[cat]], data$ENTREZID)
+  mm = m[!is.na(m)]
+  d = data.frame(cat, data[mm, ]$id, data[mm,]$ENSEMBL, 
+                 data[mm, ]$FC, data[mm,]$ENTREZID, data[mm,]$SYMBOL)
+  #d = data.frame(data[mm,]$SYMBOL)
+  filename = paste(prefix, cat, sep="_")
+  write.table(d, filename, sep="\t", row.names=F, col.names=F, quote=F)
+  return(d)
+}
+df = lapply('GO:0007155', get_genes_list,
+            uniq.annotated.degenes[which(uniq.annotated.degenes$FC<0.0), ], "line7_down_goseq_BP_genes")
