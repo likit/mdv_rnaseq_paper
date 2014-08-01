@@ -60,65 +60,59 @@ rsem-calc-expression:
 		sample_name=line7i-paired-rsem,index=models-rsem" \
 		$(protocol)/rsem_calculate_expr_paired.sh
 
-rsem-calc-gimme-models-ref-rspd:
+ebseq-line6:
 
-	qsub -v input_read="reads/line6u.se.fq",sample_name="line6u-single-rsem-cuffref-rspd",index="asm_cuff_ref_models_rsem" \
-		~/mdv-protocol/rsem_calculate_expr_single.sh
-	qsub -v input_read="reads/line6i.se.fq",sample_name="line6i-single-rsem-cuffref-rspd",index="asm_cuff_ref_models_rsem" \
-		~/mdv-protocol/rsem_calculate_expr_single.sh
+	cd gimme; \
+	rsem-generate-data-matrix line6u-single-rsem.genes.results \
+		line6u-paired-rsem.genes.results line6i-single-rsem.genes.results \
+		line6i-paired-rsem.genes.results > line6u_vs_i.gene.counts.matrix; \
+	rsem-run-ebseq line6u_vs_i.gene.counts.matrix 2,2 line6u_vs_i.degenes; \
+	rsem-control-fdr line6u_vs_i.degenes 0.05 line6u_vs_i.degenes.fdr.05
 
-	qsub -v input_read1="reads/line6u.pe.1",input_read2="reads/line6u.pe.2",sample_name="line6u-paired-rsem-cuffref-rspd",index="asm_cuff_ref_models_rsem" ~/mdv-protocol/rsem_calculate_expr_paired.sh
-	qsub -v input_read1="reads/line6i.pe.1",input_read2="reads/line6i.pe.2",sample_name="line6i-paired-rsem-cuffref-rspd",index="asm_cuff_ref_models_rsem" ~/mdv-protocol/rsem_calculate_expr_paired.sh
+ebseq-line7:
 
-	qsub -v input_read="reads/line7u.se.fq",sample_name="line7u-single-rsem-cuffref-rspd",index="asm_cuff_ref_models_rsem" \
-		~/mdv-protocol/rsem_calculate_expr_single.sh
-	qsub -v input_read="reads/line7i.se.fq",sample_name="line7i-single-rsem-cuffref-rspd",index="asm_cuff_ref_models_rsem" \
-		~/mdv-protocol/rsem_calculate_expr_single.sh
+	cd gimme; \
+	rsem-generate-data-matrix line7u-single-rsem.genes.results \
+		line7u-paired-rsem.genes.results line7i-single-rsem.genes.results \
+		line7i-paired-rsem.genes.results > line7u_vs_i.gene.counts.matrix; \
+	rsem-run-ebseq line7u_vs_i.gene.counts.matrix 2,2 line7u_vs_i.degenes; \
+	rsem-control-fdr line7u_vs_i.degenes 0.05 line7u_vs_i.degenes.fdr.05
 
-	qsub -v input_read1="reads/line7u.pe.1",input_read2="reads/line7u.pe.2",sample_name="line7u-paired-rsem-cuffref-rspd",index="asm_cuff_ref_models_rsem" ~/mdv-protocol/rsem_calculate_expr_paired.sh
-	qsub -v input_read1="reads/line7i.pe.1",input_read2="reads/line7i.pe.2",sample_name="line7i-paired-rsem-cuffref-rspd",index="asm_cuff_ref_models_rsem" ~/mdv-protocol/rsem_calculate_expr_paired.sh
+rsem-output-to-fasta:
 
-ebseq-line6-models-ref:
+	cd gimme; \
+	python $(protocol)/rsem-output-to-fasta.py \
+		line6u_vs_i.degenes.fdr.05 gimme.bed.fa > \
+		line6u_vs_i.degenes.fdr.05.fa
 
-	rsem-generate-data-matrix line6u-single-rsem-cuffref.genes.results \
-		line6u-paired-rsem-cuffref.genes.results line6i-single-rsem-cuffref.genes.results \
-		line6i-paired-rsem-cuffref.genes.results > line6u_vs_i.gene.cuffref.counts.matrix
-	rsem-run-ebseq line6u_vs_i.gene.cuffref.counts.matrix 2,2 line6u_vs_i.cuffref.degenes
-	rsem-control-fdr line6u_vs_i.cuffref.degenes 0.05 line6u_vs_i.cuffref.degenes.fdr.05
+	cd gimme; \
+	python $(protocol)/rsem-output-to-fasta.py \
+		line7u_vs_i.degenes.fdr.05 gimme.bed.fa > \
+		line7u_vs_i.degenes.fdr.05.fa
 
-ebseq-line7-models-ref:
+get-longest-sequences:
 
-	rsem-generate-data-matrix line7u-single-rsem-cuffref.genes.results \
-		line7u-paired-rsem-cuffref.genes.results line7i-single-rsem-cuffref.genes.results \
-		line7i-paired-rsem-cuffref.genes.results > line7u_vs_i.gene.cuffref.counts.matrix
-	rsem-run-ebseq line7u_vs_i.gene.cuffref.counts.matrix 2,2 line7u_vs_i.cuffref.degenes
-	rsem-control-fdr line7u_vs_i.cuffref.degenes 0.05 line7u_vs_i.cuffref.degenes.fdr.05
+	cd gimme; \
+	python $(protocol)/gene-rep.py line6u_vs_i.degenes.fdr.05.fa > \
+		line6u_vs_i.degenes.fdr.05.fa.longest
 
-filter-low-isopct:
+	cd gimme; \
+	python $(protocol)/gene-rep.py line7u_vs_i.degenes.fdr.05.fa > \
+		line7u_vs_i.degenes.fdr.05.fa.longest
 
-	python ~/mdv-protocol/filter-low-isopct.py 1.0 asm_cuff_models.bed *isoforms.results > asm_cuff_models.flt.bed
+run-blast-gallus:
 
-rsem-output-cuffref-to-fasta:
+	cd gimme; \
+	qsub -v "db=Gallus_prot,\
+		input=line6u_vs_i.degenes.fdr.05.fa.longest,program=blastx,\
+		output=line6u_vs_i.degenes.fdr.05.fa.longest.gallus.xml" \
+		$(protocol)/blast.sh
 
-	python ~/mdv-protocol/rsem-output-to-fasta.py line6u_vs_i.cuffref.degenes.fdr.05 asm_cuff_ref_models.bed.fa > line6u_vs_i.cuffref.degenes.fdr.05.fa
-	python ~/mdv-protocol/rsem-output-to-fasta.py line7u_vs_i.cuffref.degenes.fdr.05 asm_cuff_ref_models.bed.fa > line7u_vs_i.cuffref.degenes.fdr.05.fa
-
-get-longest-sequences-cuffref:
-
-	python ~/mdv-protocol/gene-rep.py line6u_vs_i.cuffref.degenes.fdr.05.fa > line6u_vs_i.cuffref.degenes.fdr.05.fa.longest
-	python ~/mdv-protocol/gene-rep.py line7u_vs_i.cuffref.degenes.fdr.05.fa > line7u_vs_i.cuffref.degenes.fdr.05.fa.longest
-	python ~/mdv-protocol/gene-rep.py line6u_vs_i.cuffref.degenes.fdr.05.fa.prot > line6u_vs_i.cuffref.degenes.fdr.05.fa.prot.longest
-	python ~/mdv-protocol/gene-rep.py line7u_vs_i.cuffref.degenes.fdr.05.fa.prot > line7u_vs_i.cuffref.degenes.fdr.05.fa.prot.longest
-
-run-blast-cuffref-gallus:
-
-	qsub -v db="Gallus_prot",input="line6u_vs_i.cuffref.degenes.fdr.05.fa.longest",program="blastx",output="line6u_vs_i.cuffref.degenes.fdr.05.fa.nucl.longest.gallus.xml" ~/mdv-protocol/blast.sh
-	qsub -v db="Gallus_prot",input="line7u_vs_i.cuffref.degenes.fdr.05.fa.longest",program="blastx",output="line7u_vs_i.cuffref.degenes.fdr.05.fa.nucl.longest.gallus.xml" ~/mdv-protocol/blast.sh
-
-run-blast-cuffref-human:
-
-	qsub -v db="Human_prot",input="line6u_vs_i.cuffref.degenes.fdr.05.fa.longest",program="blastx",output="line6u_vs_i.cuffref.degenes.fdr.05.fa.nucl.longest.human.xml" ~/mdv-protocol/blast.sh
-	qsub -v db="Human_prot",input="line7u_vs_i.cuffref.degenes.fdr.05.fa.longest",program="blastx",output="line7u_vs_i.cuffref.degenes.fdr.05.fa.nucl.longest.human.xml" ~/mdv-protocol/blast.sh
+	cd gimme; \
+	qsub -v "db=Gallus_prot,\
+		input=line6u_vs_i.degenes.fdr.05.fa.longest,program=blastx,\
+		output=line6u_vs_i.degenes.fdr.05.fa.longest.gallus.xml" \
+		$(protocol)/blast.sh
 
 get-tophits:
 

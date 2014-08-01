@@ -21,6 +21,13 @@ At your working directory run all the following commands.
 
 ###Prepare Reads
 
+Get reads
+
+    wget http://athyra.ged.msu.edu/~preeyano/mdv/paired-end/*
+    wget http://athyra.ged.msu.edu/~preeyano/mdv/single-end/*
+
+Quality trim
+
     make -f $PROTOCOL/misc.mk protocol=$PROTOCOL run-quality-trim-pe
     make -f $PROTOCOL/misc.mk protocol=$PROTOCOL run-quality-trim-se
 
@@ -104,4 +111,38 @@ Build RSEM reference
 
 Run RSEM calculate expression
 
-    make -f $PROTOCOL/makefile protocol=$PROTOCOL rsem-calculate-expression
+    make -f $PROTOCOL/makefile protocol=$PROTOCOL rsem-calc-expression
+
+Run EBSeq
+
+    make -f $PROTOCOL/makefile ebseq-line7 ebseq-line6
+
+Convert RSEM DE output to FASTA
+
+    make -f $PROTOCOL/makefile protocol=$PROTOCOL rsem-output-to-fasta
+
+Get longest sequences
+
+    make -f $PROTOCOL/makefile protocol=$PROTOCOL get-longest-sequences
+
+Annotate sequences with chicken ENSEMBL genes
+
+    make -f $PROTOCOL/makefile protocol=$PROTOCOL run-blast-gallus
+
+###MISO analysis
+
+Map reads to the genome
+
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL run-tophat-se
+
+Merge BAM files from paired- and single-end reads and index them
+
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL merge-bam-files
+
+Filter out low abundance isoforms
+
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL filter-low-isopct
+
+Build SE, A3SS and A5SS models
+
+    make -f $PROTOCOL/miso.mk gimmedir=$GIMMEDIR build-se-models build-a3ss-models build-a5ss-models
