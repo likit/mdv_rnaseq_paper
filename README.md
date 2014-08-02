@@ -9,6 +9,16 @@ Required software
 + BLAT
 + Seqclean x86_64
 + Cufflinks v.2.1.1
++ Tophat2
++ Bowtie 1.0.0
++ RSEM 1.2.7
++ ESTScan 3.0.3
++ Seqtk
++ InterproScan
++ Velvet 1.2.03
++ Oases 0.2.06
++ BLAST+ 2.2.25
++ MISO 0.49
 
 #Protocol
 
@@ -146,3 +156,36 @@ Filter out low abundance isoforms
 Build SE, A3SS and A5SS models
 
     make -f $PROTOCOL/miso.mk gimmedir=$GIMMEDIR build-se-models build-a3ss-models build-a5ss-models
+
+Run MISO
+
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL run-miso-se run-miso-a3ss run-miso-a5ss
+
+Summarize MISO results
+
+    make -f $PROTOCOL/miso.mk summarize-se summarize-a3ss summarize-a5ss
+
+Compare MISO results
+
+    make -f $PROTOCOL/miso.mk compare-miso-se compare-miso-a3ss compare-miso-a5ss
+
+Filter MISO results
+
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL filter-miso-se filter-miso-a3ss filter-miso-a5ss
+
+Annotate isoforms
+
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL miso-to-fa-se miso-to-fa-a3ss miso-to-fa-a5ss
+
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL blast-miso-se blast-miso-a3ss blast-miso-a5ss
+
+Translate isoforms
+
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL translate-isoforms-miso-se
+
+Run Interpro scan
+
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL interpro-isoforms-miso-se
+
+Annotate protein domains
+
