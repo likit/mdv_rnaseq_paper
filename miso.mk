@@ -29,6 +29,11 @@ merge-bam-files:
 		samtools index line6u.bam
 
 	cd miso/bam-data; \
+		samtools merge -h inh.sam line6u.bam \
+		line6u_se/accepted_hits.bam line6u_pe/accepted_hits.bam; \
+		samtools index line6u.bam
+
+	cd miso/bam-data; \
 		samtools merge -h inh.sam line6i.bam \
 		line6i_se/accepted_hits.bam line6i_pe/accepted_hits.bam; \
 		samtools index line6i.bam
@@ -74,33 +79,79 @@ run-miso-se:
 
 	cd miso; \
 		qsub -v "input_bam=bam-data/line6u.bam,\
-		setting_file=$(protocol)/miso_settings.txt\
+		setting_file=$(protocol)/miso_settings.txt,\
 		index_dir=indexes/SE,output_dir=results/SE/line6u,\
 		event=SE" $(protocol)/miso.sh
 
-	# cd miso; \
-	# 	qsub -v "input_bam=bam-data/line6i.bam,\
-	#	setting_file=$(protocol)/miso_settings.txt\
-	# 	index_dir=indexes/SE,output_dir=results/SE/line6i,\
-	# 	event=SE" $(protocol)/miso.sh
+	cd miso; \
+		qsub -v "input_bam=bam-data/line6i.bam,\
+		setting_file=$(protocol)/miso_settings.txt,\
+		index_dir=indexes/SE,output_dir=results/SE/line6i,\
+		event=SE" $(protocol)/miso.sh
 
-	# cd miso; \
-	# 	qsub -v "input_bam=bam-data/line7u.bam,\
-	#	setting_file=$(protocol)/miso_settings.txt\
-	# 	index_dir=indexes/SE,output_dir=results/SE/line7u,\
-	# 	event=SE" $(protocol)/miso.sh
+	cd miso; \
+		qsub -v "input_bam=bam-data/line7u.bam,\
+		setting_file=$(protocol)/miso_settings.txt,\
+		index_dir=indexes/SE,output_dir=results/SE/line7u,\
+		event=SE" $(protocol)/miso.sh
 
-	# cd miso; \
-	# 	qsub -v "input_bam=bam-data/line7i.bam,\
-	#	setting_file=$(protocol)/miso_settings.txt\
-	# 	index_dir=indexes/SE,output_dir=results/SE/line7i,\
-	# 	event=SE" $(protocol)/miso.sh
+	cd miso; \
+		qsub -v "input_bam=bam-data/line7i.bam,\
+		setting_file=$(protocol)/miso_settings.txt,\
+		index_dir=indexes/SE,output_dir=results/SE/line7i,\
+		event=SE" $(protocol)/miso.sh
 
 run-miso-a3ss:
 
+	cd miso; \
+		qsub -v "input_bam=bam-data/line6u.bam,\
+		setting_file=$(protocol)/miso_settings.txt,\
+		index_dir=indexes/A3SS,output_dir=results/A3SS/line6u,\
+		event=A3SS" $(protocol)/miso.sh
+
+	cd miso; \
+		qsub -v "input_bam=bam-data/line6i.bam,\
+		setting_file=$(protocol)/miso_settings.txt,\
+		index_dir=indexes/A3SS,output_dir=results/A3SS/line6i,\
+		event=A3SS" $(protocol)/miso.sh
+
+	cd miso; \
+		qsub -v "input_bam=bam-data/line7u.bam,\
+		setting_file=$(protocol)/miso_settings.txt,\
+		index_dir=indexes/A3SS,output_dir=results/A3SS/line7u,\
+		event=A3SS" $(protocol)/miso.sh
+
+	cd miso; \
+		qsub -v "input_bam=bam-data/line7i.bam,\
+		setting_file=$(protocol)/miso_settings.txt,\
+		index_dir=indexes/A3SS,output_dir=results/A3SS/line7i,\
+		event=A3SS" $(protocol)/miso.sh
 
 run-miso-a5ss:
 
+	cd miso; \
+		qsub -v "input_bam=bam-data/line6u.bam,\
+		setting_file=$(protocol)/miso_settings.txt,\
+		index_dir=indexes/A5SS,output_dir=results/A5SS/line6u,\
+		event=A5SS" $(protocol)/miso.sh
+
+	cd miso; \
+		qsub -v "input_bam=bam-data/line6i.bam,\
+		setting_file=$(protocol)/miso_settings.txt,\
+		index_dir=indexes/A5SS,output_dir=results/A5SS/line6i,\
+		event=A5SS" $(protocol)/miso.sh
+
+	cd miso; \
+		qsub -v "input_bam=bam-data/line7u.bam,\
+		setting_file=$(protocol)/miso_settings.txt,\
+		index_dir=indexes/A5SS,output_dir=results/A5SS/line7u,\
+		event=A5SS" $(protocol)/miso.sh
+
+	cd miso; \
+		qsub -v "input_bam=bam-data/line7i.bam,\
+		setting_file=$(protocol)/miso_settings.txt,\
+		index_dir=indexes/A5SS,output_dir=results/A5SS/line7i,\
+		event=A5SS" $(protocol)/miso.sh
 
 summarize-se:
 
@@ -127,7 +178,6 @@ compare-miso-se:
 
 	cd miso; run_miso.py --compare-samples results/SE/line6u results/SE/line7u results/SE/comparisons
 	cd miso; run_miso.py --compare-samples results/SE/line6i results/SE/line7i results/SE/comparisons
-
 
 	cd miso; run_miso.py --compare-samples results/SE/line6u results/SE/line6i results/SE/comparisons
 	cd miso; run_miso.py --compare-samples results/SE/line7u results/SE/line7i results/SE/comparisons
