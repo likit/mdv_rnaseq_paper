@@ -31,6 +31,14 @@ Required software
 
 At your working directory run all the following commands.
 
+###Grab gene models and some prerequisite data
+
+Please consult https://github.com/likit/RNASeq-methods-comparison
+protocol on how to build Gimme models.
+
+    wget http://athyra.ged.msu.edu/~preeyano/gene-network/pipeline/gimme/gimme.bed
+    wget http://athyra.ged.msu.edu/~preeyano/gene-network/pipeline/gal4selected*
+
 ###Prepare the reference genome
 
     make -f $PROTOCOL/makefile protocol=$PROTOCOL init
@@ -208,4 +216,4 @@ MISO to KEGG
 Find DEU snps
 
     make -f $PROTOCOL/miso.mk protocol=$PROTOCOL miso-snps-se miso-snps-a3ss miso-snps-a5ss
-    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL projpaht=$PWD find-deu-snps-se find-deu-snps-a3ss find-deu-snps-a5ss
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL projpath=$PWD find-deu-snps-se find-deu-snps-a3ss find-deu-snps-a5ss
