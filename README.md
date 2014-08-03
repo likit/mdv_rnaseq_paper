@@ -21,6 +21,7 @@ Required software
 + MISO 0.49
 + GATK 2.5.2
 + PicardTools 1.113
++ Samtools 0.1.19
 
 #Protocol
 
@@ -36,10 +37,13 @@ At your working directory run all the following commands.
 Please consult https://github.com/likit/RNASeq-methods-comparison
 protocol on how to build Gimme models.
 
-    wget http://athyra.ged.msu.edu/~preeyano/gene-network/pipeline/gimme/gimme.bed
+    wget http://athyra.ged.msu.edu/~preeyano/gene-network/pipeline/gimme/gimme.*
     wget http://athyra.ged.msu.edu/~preeyano/gene-network/pipeline/gal4selected*
 
 ###Prepare the reference genome
+
+This step sorts the FASTA file and builds
+a dictionary required for a SNP analysis using GATK.
 
     make -f $PROTOCOL/makefile protocol=$PROTOCOL init
 
@@ -54,78 +58,6 @@ Quality trim
 
     make -f $PROTOCOL/misc.mk protocol=$PROTOCOL run-quality-trim-pe
     make -f $PROTOCOL/misc.mk protocol=$PROTOCOL run-quality-trim-se
-
-###Cufflinks
-
-Map reads to the genome using Tophat
-
-    make -f $PROTOCOL/cufflinks.mk protocol=$PROTOCOL run-tophat-pe
-    make -f $PROTOCOL/cufflinks.mk protocol=$PROTOCOL run-tophat-se
-
-Run RSEM prepare reference
-
-    make -f $PROTOCOL/cufflinks.mk prepare-reference-cufflinks
-
-Then run Cufflinks
-
-    make -f $PROTOCOL/cufflinks.mk protocol=$PROTOCOL run-cufflinks
-
-Merge gene models from all samples
-
-    make -f $PROTOCOL/cufflinks.mk protocol=$PROTOCOL run-cuffmerge-ref
-
-###Local assembly
-
-Extract reads from each chromosome
-
-    make -f $PROTOCOL/local_assembly.mk protocol=$PROTOCOL extract-reads
-
-Merge reads from each chromosome to local assembly directory
-
-    make -f $PROTOCOL/local_assembly.mk protocol=$PROTOCOL merge-bams
-
-Run Velveth, Velvetg and Oases
-
-    make -f $PROTOCOL/local_assembly.mk protocol=$PROTOCOL run-velveth-local
-    make -f $PROTOCOL/local_assembly.mk protocol=$PROTOCOL run-velvetg-local
-    make -f $PROTOCOL/local_assembly.mk protocol=$PROTOCOL run-oases-local
-
-Merge transcripts
-
-    make -f $PROTOCOL/local_assembly.mk gimmedir=$GIMMEDIR combine-transcripts
-
-###Merged models
-
-Combine all transcripts
-
-    make -f $PROTOCOL/gimme.mk protocol=$PROTOCOL gimmedir=$GIMMEDIR combine-transcripts
-
-Clean transcripts
-
-    make -f $PROTOCOL/gimme.mk clean-transcripts
-
-Remove redundant sequences
-
-    make -f $PROTOCOL/gimme.mk protocol=$PROTOCOL remove-redundant-seq
-
-Align transcripts
-
-    make -f $PROTOCOL/gimme.mk protocol=$PROTOCOL align-transcripts
-
-Sort and select best alignments
-
-    make -f $PROTOCOL/gimme.mk protocol=$PROTOCOL sort-alignments
-
-Build merged models
-
-    make -f $PROTOCOL/gimme.mk protocol=$PROTOCOL gimmedir=$GIMMEDIR build-merged-gene-models
-
-Note, gimme.bed may contain warning messages from pygr at the beginning of the file.
-The messages have to be removed before running the next step.
-
-Get transcripts from gene models
-
-    make -f $PROTOCOL/gimme.mk protocol=$PROTOCOL gimmedir=$GIMMEDIR merged-models-to-transcripts
 
 ###Run DE analysis
 
