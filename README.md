@@ -19,6 +19,8 @@ Required software
 + Oases 0.2.06
 + BLAST+ 2.2.25
 + MISO 0.49
++ GATK 2.5.2
++ PicardTools 1.113
 
 #Protocol
 
@@ -28,6 +30,10 @@ Required software
     export GIMMEDIR=<path to Gimme>
 
 At your working directory run all the following commands.
+
+###Prepare the reference genome
+
+    make -f $PROTOCOL/makefile protocol=$PROTOCOL init
 
 ###Prepare Reads
 
@@ -181,11 +187,25 @@ Annotate isoforms
 
 Translate isoforms
 
-    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL translate-isoforms-miso-se
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL translate-isoforms-miso-se translate-isoforms-miso-a3ss translate-isoforms-miso-a5ss
 
 Run Interpro scan
 
-    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL interpro-isoforms-miso-se
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL interpro-isoforms-miso-se interpro-isoforms-miso-a3ss interpro-isoforms-miso-a5ss
+
+BLAT domains
+
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL blat-domains-se blat-domains-a3ss blat-domains-a5ss
 
 Annotate protein domains
 
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL annotate-domains-se annotate-domains-a3ss annotate-domains-a5ss
+
+MISO to KEGG
+
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL miso-to-kegg-se miso-to-kegg-a3ss miso-to-kegg-a5ss
+
+Find DEU snps
+
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL miso-snps-se miso-snps-a3ss miso-snps-a5ss
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL projpaht=$PWD find-deu-snps-se find-deu-snps-a3ss find-deu-snps-a5ss

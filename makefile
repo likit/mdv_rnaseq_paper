@@ -4,7 +4,13 @@
 
 init:
 
-	java -jar /opt/software/picardTools/1.113/CreateSequenceDictionary.jar R=gal4selected.sorted.fa O=gal4selected.sorted.dict
+	grep '>' gal4selected.fa | sort | sed s/\>// > ref.sort.list
+	python $(protocol)/sort-fasta.py gal4selected.fa \
+		ref.sort.list gal4selected.sorted.fa
+
+	java -jar /opt/software/picardTools/1.113/CreateSequenceDictionary.jar \
+		R=gal4selected.sorted.fa O=gal4selected.sorted.dict
+
 	samtools faidx gal4selected.sorted.fa
 
 ###############################################
