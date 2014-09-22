@@ -26,14 +26,18 @@ Required software
 
 #Protocol
 
+This protocol is only tested on MSU HPC computer cluster.
+More info about the system can be found at https://icer.msu.edu/hpcc.
+
 ###Setup paths
 
     export PROTOCOL=<path to the protocol>
     export GIMMEDIR=<path to Gimme>
 
-At your working directory run all the following commands.
+Create a working directory and run all the following commands inside the
+directory.
 
-###Grab gene models and some prerequisite data
+###Acquire gene models and some prerequisite data
 
 Please consult https://github.com/likit/RNASeq-methods-comparison
 protocol on how to build Gimme models.
@@ -82,9 +86,13 @@ Get longest sequences
 
     make -f $PROTOCOL/makefile protocol=$PROTOCOL get-longest-sequences
 
+Create Gallus gallus BLAST database:
+
+    make -f $PROTOCOL/makefile create-gallus-blastdb
+
 Annotate sequences with chicken ENSEMBL genes
 
-    make -f $PROTOCOL/makefile protocol=$PROTOCOL run-blast-gallus
+    make -f $PROTOCOL/makefile protocol=$PROTOCOL projdir=$PWD run-blast-gallus
 
 ###MISO analysis
 
@@ -150,3 +158,15 @@ Find DEU snps
 
     make -f $PROTOCOL/miso.mk protocol=$PROTOCOL miso-snps-se miso-snps-a3ss miso-snps-a5ss
     make -f $PROTOCOL/miso.mk protocol=$PROTOCOL projpath=$PWD find-deu-snps-se find-deu-snps-a3ss find-deu-snps-a5ss
+
+###Run the actual analysis
+
+Copy data
+
+    # on your local computer
+    mkdir -p mdvproj/results
+    cd mdvproj; make -f $PROTOCOL/copy.mk all
+
+Get gene info from chicken and human annotation
+
+    cd mdvproj; make -f $PROTOCOL/analysis.mk annotate
