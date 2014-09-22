@@ -15,6 +15,7 @@ if __name__=='__main__':
     gff_file = sys.argv[1]
     variant = sys.argv[2]
     outprefix = sys.argv[3]
+    ref = sys.argv[4]
     try:
         r = reader(open(gff_file), 'excel-tab')
     except:
@@ -25,8 +26,8 @@ if __name__=='__main__':
         id = rec[-1].split(';')[0].split('=')[1]
         interval =  "%s:%s-%s" % (rec[0], rec[3], rec[4])
         command = "GATK -T FastaAlternateReferenceMaker " \
-                    "-R /mnt/ls12/preeyanon/mdv-pipeline/gal4selected.sorted.fa " \
+                    "-R %s " \
                     "-o %s -V:testsnp,VCF %s -L %s" \
-                    % (outprefix + '.' + id + '.fa', variant, interval)
+                    % (ref, outprefix + '.' + id + '.fa', variant, interval)
 
         subprocess.call(command, shell=True)

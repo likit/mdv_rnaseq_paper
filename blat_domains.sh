@@ -6,4 +6,4 @@
 
 cd ${PBS_O_WORKDIR} 
 
-blat /mnt/ls12/preeyanon/mdv-pipeline/gal4selected.2bit ${input} -q=prot -t=dnax -noHead ${input}.psl
+blat ${index} ${input} -q=prot -t=dnax -noHead ${input}.psl

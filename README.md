@@ -9,6 +9,20 @@ Required software
 + BLAT
 + Seqclean x86_64
 + Cufflinks v.2.1.1
++ Tophat 2.0.9
++ Bowtie 2.2.1
++ RSEM 1.2.7
++ Bowtie 1.0.0
++ ESTScan 3.0.3
++ Seqtk
++ InterproScan 5.44.0
++ Velvet 1.2.03
++ Oases 0.2.06
++ BLAST+ 2.2.25
++ MISO 0.49
++ GATK 2.5.2
++ PicardTools 1.113
++ Samtools 0.1.19
 
 #Protocol
 
@@ -18,6 +32,21 @@ Required software
     export GIMMEDIR=<path to Gimme>
 
 At your working directory run all the following commands.
+
+###Grab gene models and some prerequisite data
+
+Please consult https://github.com/likit/RNASeq-methods-comparison
+protocol on how to build Gimme models.
+
+    wget http://athyra.ged.msu.edu/~preeyano/gene-network/pipeline/gimme/gimme.*
+    wget http://athyra.ged.msu.edu/~preeyano/gene-network/pipeline/gal4selected*
+
+###Prepare the reference genome
+
+This step sorts the FASTA file and builds
+a dictionary required for a SNP analysis using GATK.
+
+    make -f $PROTOCOL/makefile protocol=$PROTOCOL init
 
 ###Prepare Reads
 
@@ -30,78 +59,6 @@ Quality trim
 
     make -f $PROTOCOL/misc.mk protocol=$PROTOCOL run-quality-trim-pe
     make -f $PROTOCOL/misc.mk protocol=$PROTOCOL run-quality-trim-se
-
-###Cufflinks
-
-Map reads to the genome using Tophat
-
-    make -f $PROTOCOL/cufflinks.mk protocol=$PROTOCOL run-tophat-pe
-    make -f $PROTOCOL/cufflinks.mk protocol=$PROTOCOL run-tophat-se
-
-Run RSEM prepare reference
-
-    make -f $PROTOCOL/cufflinks.mk prepare-reference-cufflinks
-
-Then run Cufflinks
-
-    make -f $PROTOCOL/cufflinks.mk protocol=$PROTOCOL run-cufflinks
-
-Merge gene models from all samples
-
-    make -f $PROTOCOL/cufflinks.mk protocol=$PROTOCOL run-cuffmerge-ref
-
-###Local assembly
-
-Extract reads from each chromosome
-
-    make -f $PROTOCOL/local_assembly.mk protocol=$PROTOCOL extract-reads
-
-Merge reads from each chromosome to local assembly directory
-
-    make -f $PROTOCOL/local_assembly.mk protocol=$PROTOCOL merge-bams
-
-Run Velveth, Velvetg and Oases
-
-    make -f $PROTOCOL/local_assembly.mk protocol=$PROTOCOL run-velveth-local
-    make -f $PROTOCOL/local_assembly.mk protocol=$PROTOCOL run-velvetg-local
-    make -f $PROTOCOL/local_assembly.mk protocol=$PROTOCOL run-oases-local
-
-Merge transcripts
-
-    make -f $PROTOCOL/local_assembly.mk gimmedir=$GIMMEDIR combine-transcripts
-
-###Merged models
-
-Combine all transcripts
-
-    make -f $PROTOCOL/gimme.mk protocol=$PROTOCOL gimmedir=$GIMMEDIR combine-transcripts
-
-Clean transcripts
-
-    make -f $PROTOCOL/gimme.mk clean-transcripts
-
-Remove redundant sequences
-
-    make -f $PROTOCOL/gimme.mk protocol=$PROTOCOL remove-redundant-seq
-
-Align transcripts
-
-    make -f $PROTOCOL/gimme.mk protocol=$PROTOCOL align-transcripts
-
-Sort and select best alignments
-
-    make -f $PROTOCOL/gimme.mk protocol=$PROTOCOL sort-alignments
-
-Build merged models
-
-    make -f $PROTOCOL/gimme.mk protocol=$PROTOCOL gimmedir=$GIMMEDIR build-merged-gene-models
-
-Note, gimme.bed may contain warning messages from pygr at the beginning of the file.
-The messages have to be removed before running the next step.
-
-Get transcripts from gene models
-
-    make -f $PROTOCOL/gimme.mk protocol=$PROTOCOL gimmedir=$GIMMEDIR merged-models-to-transcripts
 
 ###Run DE analysis
 
@@ -146,3 +103,50 @@ Filter out low abundance isoforms
 Build SE, A3SS and A5SS models
 
     make -f $PROTOCOL/miso.mk gimmedir=$GIMMEDIR build-se-models build-a3ss-models build-a5ss-models
+
+Run MISO
+
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL run-miso-se run-miso-a3ss run-miso-a5ss
+
+Summarize MISO results
+
+    make -f $PROTOCOL/miso.mk summarize-se summarize-a3ss summarize-a5ss
+
+Compare MISO results
+
+    make -f $PROTOCOL/miso.mk compare-miso-se compare-miso-a3ss compare-miso-a5ss
+
+Filter MISO results
+
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL filter-miso-se filter-miso-a3ss filter-miso-a5ss
+
+Annotate isoforms
+
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL miso-to-fa-se miso-to-fa-a3ss miso-to-fa-a5ss
+
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL blast-miso-se blast-miso-a3ss blast-miso-a5ss
+
+Translate isoforms
+
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL translate-isoforms-miso-se translate-isoforms-miso-a3ss translate-isoforms-miso-a5ss
+
+Run Interpro scan
+
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL interpro-isoforms-miso-se interpro-isoforms-miso-a3ss interpro-isoforms-miso-a5ss
+
+BLAT domains
+
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL blat-domains-se blat-domains-a3ss blat-domains-a5ss
+
+Annotate protein domains
+
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL annotate-domains-se annotate-domains-a3ss annotate-domains-a5ss
+
+MISO to KEGG
+
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL miso-to-kegg-se miso-to-kegg-a3ss miso-to-kegg-a5ss
+
+Find DEU snps
+
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL miso-snps-se miso-snps-a3ss miso-snps-a5ss
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL projpath=$PWD find-deu-snps-se find-deu-snps-a3ss find-deu-snps-a5ss
