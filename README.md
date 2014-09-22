@@ -9,12 +9,13 @@ Required software
 + BLAT
 + Seqclean x86_64
 + Cufflinks v.2.1.1
-+ Tophat2
-+ Bowtie 1.0.0
++ Tophat 2.0.9
++ Bowtie 2.2.1
 + RSEM 1.2.7
++ Bowtie 1.0.0
 + ESTScan 3.0.3
 + Seqtk
-+ InterproScan
++ InterproScan 5.44.0
 + Velvet 1.2.03
 + Oases 0.2.06
 + BLAST+ 2.2.25

@@ -660,7 +660,7 @@ miso-snps-a3ss:
 
 miso-snps-a5ss:
 
-	cd miso; grep exon gimme.flt.A5SS.gff > gimme.flt.A3SS.exons.gff
+	cd miso; grep exon gimme.flt.A5SS.gff > gimme.flt.A5SS.exons.gff
 	cd miso/results/A5SS/comparisons/line6i_vs_line7i/bayes-factors; \
 		python $(protocol)/miso-call-snps.py line6i_vs_line7i.miso_bf.flt \
 		../../../../../../gal4selected.fa line6i_vs_line7i.miso_bf.flt.line6.snps \
@@ -748,22 +748,176 @@ find-deu-snps-se:
 			python $(protocol)/blast_to_snps.py $$f > $$f.snps; \
 		done
 
+find-deu-snps-a3ss:
+
+	cd miso/results/A3SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		python $(protocol)/select_events.py ../../../../../gimme.flt.A3SS.gff \
+		line6i_vs_line7i.miso_bf.flt A3SS | sort -k1,1 -k4,5n > line6i_vs_line7i.miso_bf.flt.A3SS.gff
+
+	cd miso/results/A3SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		cat *line6.snps_* | sort -k1,1 -k2,2n | awk '$$6>19' >> line6i_vs_line7i.miso_bf.flt.line6.snps.vcf; \
+		cat *line7.snps_* | sort -k1,1 -k2,2n | awk '$$6>19' >> line6i_vs_line7i.miso_bf.flt.line7.snps.vcf
+
+	cd miso/results/A3SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		cat $(protocol)/vcf.header.txt > line6i_vs_line7i.miso_bf.flt.line6.A3SS.snps.vcf; \
+		intersectBed -b line6i_vs_line7i.miso_bf.flt.A3SS.gff \
+		-a line6i_vs_line7i.miso_bf.flt.line6.snps.vcf -wb \
+		| sort -k1,1 -k2,2n >> line6i_vs_line7i.miso_bf.flt.line6.A3SS.snps.vcf
+
+	cd miso/results/A3SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		cat $(protocol)/vcf.header.txt > line6i_vs_line7i.miso_bf.flt.line7.A3SS.snps.vcf; \
+		intersectBed -b line6i_vs_line7i.miso_bf.flt.A3SS.gff \
+		-a line6i_vs_line7i.miso_bf.flt.line7.snps.vcf -wb \
+		| sort -k1,1 -k2,2n >> line6i_vs_line7i.miso_bf.flt.line7.A3SS.snps.vcf
+
+	cd miso/results/A3SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		GATK -T LeftAlignAndTrimVariants -R $(projpath)/gal4selected.sorted.fa \
+		-trim -V:testsnp,VCF line6i_vs_line7i.miso_bf.flt.line7.A3SS.snps.vcf \
+		-o line6i_vs_line7i.miso_bf.flt.line7.A3SS.trimmed.snps.vcf; \
+		GATK -T LeftAlignAndTrimVariants -R $(projpath)/gal4selected.sorted.fa \
+		-trim -V:testsnp,VCF line6i_vs_line7i.miso_bf.flt.line6.A3SS.snps.vcf \
+		-o line6i_vs_line7i.miso_bf.flt.line6.A3SS.trimmed.snps.vcf
+
+	cd miso/results/A3SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		python $(protocol)/get_variant_seq.py line6i_vs_line7i.miso_bf.flt.A3SS.gff \
+		line6i_vs_line7i.miso_bf.flt.line6.A3SS.trimmed.snps.vcf line6.variant \
+		$(projpath)/gal4selected.sorted.fa
+
+	cd miso/results/A3SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		python $(protocol)/get_variant_seq.py line6i_vs_line7i.miso_bf.flt.A3SS.gff \
+		line6i_vs_line7i.miso_bf.flt.line7.A3SS.trimmed.snps.vcf line7.variant \
+		$(projpath)/gal4selected.sorted.fa
+
+	cd miso/results/A3SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		python $(protocol)/check_strand.py line6i_vs_line7i.miso_bf.flt.A3SS.gff line7.variant; \
+		python $(protocol)/check_strand.py line6i_vs_line7i.miso_bf.flt.A3SS.gff line6.variant
+
+	cd miso/results/A3SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		python $(protocol)/find_diff_snps.py \
+		line6i_vs_line7i.miso_bf.flt.line6.A3SS.trimmed.snps.vcf \
+		line6i_vs_line7i.miso_bf.flt.line7.A3SS.snps.vcf 20 | \
+		sort -k1,1 -k2,2n  > line6i_vs_line7i.miso_bf.flt.line6.A3SS.diff.snps.vcf
+
+	cd miso/results/A3SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		python $(protocol)/find_diff_snps.py \
+		line6i_vs_line7i.miso_bf.flt.line7.A3SS.trimmed.snps.vcf \
+		line6i_vs_line7i.miso_bf.flt.line6.A3SS.snps.vcf 20 | \
+		sort -k1,1 -k2,2n  > line6i_vs_line7i.miso_bf.flt.line7.A3SS.diff.snps.vcf
+
+	cd miso/results/A3SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		intersectBed -b line6i_vs_line7i.miso_bf.flt.A3SS.gff \
+		-a line6i_vs_line7i.miso_bf.flt.line6.A3SS.diff.snps.vcf \
+		-wb > line6i_vs_line7i.miso_bf.flt.line6.A3SS.diff.snps.exons.vcf
+
+	cd miso/results/A3SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		intersectBed -b line6i_vs_line7i.miso_bf.flt.A3SS.gff \
+		-a line6i_vs_line7i.miso_bf.flt.line7.A3SS.diff.snps.vcf \
+		-wb > line6i_vs_line7i.miso_bf.flt.line7.A3SS.diff.snps.exons.vcf
+
+	cd miso/results/A3SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		for f in line6.variant*.fa; do \
+			blat $$f $$(echo $$f | sed s/line6/line7/) -out=blast $$f.blast; \
+		done
+
+	cd miso/results/A3SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		for f in line6.variant*.fa.blast; do \
+			echo "working on " $$f; \
+			python $(protocol)/blast_to_snps.py $$f > $$f.snps; \
+		done
+
+find-deu-snps-a5ss:
+
+	cd miso/results/A5SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		python $(protocol)/select_events.py ../../../../../gimme.flt.A5SS.gff \
+		line6i_vs_line7i.miso_bf.flt A5SS | sort -k1,1 -k4,5n > line6i_vs_line7i.miso_bf.flt.A5SS.gff
+
+	cd miso/results/A5SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		cat *line6.snps_* | sort -k1,1 -k2,2n | awk '$$6>19' >> line6i_vs_line7i.miso_bf.flt.line6.snps.vcf; \
+		cat *line7.snps_* | sort -k1,1 -k2,2n | awk '$$6>19' >> line6i_vs_line7i.miso_bf.flt.line7.snps.vcf
+
+	cd miso/results/A5SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		cat $(protocol)/vcf.header.txt > line6i_vs_line7i.miso_bf.flt.line6.A5SS.snps.vcf; \
+		intersectBed -b line6i_vs_line7i.miso_bf.flt.A5SS.gff \
+		-a line6i_vs_line7i.miso_bf.flt.line6.snps.vcf -wb \
+		| sort -k1,1 -k2,2n >> line6i_vs_line7i.miso_bf.flt.line6.A5SS.snps.vcf
+
+	cd miso/results/A5SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		cat $(protocol)/vcf.header.txt > line6i_vs_line7i.miso_bf.flt.line7.A5SS.snps.vcf; \
+		intersectBed -b line6i_vs_line7i.miso_bf.flt.A5SS.gff \
+		-a line6i_vs_line7i.miso_bf.flt.line7.snps.vcf -wb \
+		| sort -k1,1 -k2,2n >> line6i_vs_line7i.miso_bf.flt.line7.A5SS.snps.vcf
+
+	cd miso/results/A5SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		GATK -T LeftAlignAndTrimVariants -R $(projpath)/gal4selected.sorted.fa \
+		-trim -V:testsnp,VCF line6i_vs_line7i.miso_bf.flt.line7.A5SS.snps.vcf \
+		-o line6i_vs_line7i.miso_bf.flt.line7.A5SS.trimmed.snps.vcf; \
+		GATK -T LeftAlignAndTrimVariants -R $(projpath)/gal4selected.sorted.fa \
+		-trim -V:testsnp,VCF line6i_vs_line7i.miso_bf.flt.line6.A5SS.snps.vcf \
+		-o line6i_vs_line7i.miso_bf.flt.line6.A5SS.trimmed.snps.vcf
+
+	cd miso/results/A5SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		python $(protocol)/get_variant_seq.py line6i_vs_line7i.miso_bf.flt.A5SS.gff \
+		line6i_vs_line7i.miso_bf.flt.line6.A5SS.trimmed.snps.vcf line6.variant \
+		$(projpath)/gal4selected.sorted.fa
+
+	cd miso/results/A5SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		python $(protocol)/get_variant_seq.py line6i_vs_line7i.miso_bf.flt.A5SS.gff \
+		line6i_vs_line7i.miso_bf.flt.line7.A5SS.trimmed.snps.vcf line7.variant \
+		$(projpath)/gal4selected.sorted.fa
+
+	cd miso/results/A5SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		python $(protocol)/check_strand.py line6i_vs_line7i.miso_bf.flt.A5SS.gff line7.variant; \
+		python $(protocol)/check_strand.py line6i_vs_line7i.miso_bf.flt.A5SS.gff line6.variant
+
+	cd miso/results/A5SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		python $(protocol)/find_diff_snps.py \
+		line6i_vs_line7i.miso_bf.flt.line6.A5SS.trimmed.snps.vcf \
+		line6i_vs_line7i.miso_bf.flt.line7.A5SS.snps.vcf 20 | \
+		sort -k1,1 -k2,2n  > line6i_vs_line7i.miso_bf.flt.line6.A5SS.diff.snps.vcf
+
+	cd miso/results/A5SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		python $(protocol)/find_diff_snps.py \
+		line6i_vs_line7i.miso_bf.flt.line7.A5SS.trimmed.snps.vcf \
+		line6i_vs_line7i.miso_bf.flt.line6.A5SS.snps.vcf 20 | \
+		sort -k1,1 -k2,2n  > line6i_vs_line7i.miso_bf.flt.line7.A5SS.diff.snps.vcf
+
+	cd miso/results/A5SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		intersectBed -b line6i_vs_line7i.miso_bf.flt.A5SS.gff \
+		-a line6i_vs_line7i.miso_bf.flt.line6.A5SS.diff.snps.vcf \
+		-wb > line6i_vs_line7i.miso_bf.flt.line6.A5SS.diff.snps.exons.vcf
+
+	cd miso/results/A5SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		intersectBed -b line6i_vs_line7i.miso_bf.flt.A5SS.gff \
+		-a line6i_vs_line7i.miso_bf.flt.line7.A5SS.diff.snps.vcf \
+		-wb > line6i_vs_line7i.miso_bf.flt.line7.A5SS.diff.snps.exons.vcf
+
+	cd miso/results/A5SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		for f in line6.variant*.fa; do \
+			blat $$f $$(echo $$f | sed s/line6/line7/) -out=blast $$f.blast; \
+		done
+
+	cd miso/results/A5SS/comparisons/line6i_vs_line7i/bayes-factors; \
+		for f in line6.variant*.fa.blast; do \
+			echo "working on " $$f; \
+			python $(protocol)/blast_to_snps.py $$f > $$f.snps; \
+		done
+
 convert-snps-to-csv:
 
-	cd miso/cuffref-results/A5SS/comparisons/line6i_vs_line7i/bayes-factors; \
+	cd miso/results/A5SS/comparisons/line6i_vs_line7i/bayes-factors; \
 		cat line6i_vs_line7i.miso_bf.flt.line6.A5SS.diff.snps.exons.vcf | python ~/mdv-protocol/to_csv.py > line6i_vs_line7i.miso_bf.flt.line6.A5SS.diff.snps.exons.csv
 
-	cd miso/cuffref-results/A5SS/comparisons/line6i_vs_line7i/bayes-factors; \
+	cd miso/results/A5SS/comparisons/line6i_vs_line7i/bayes-factors; \
 		cat line6i_vs_line7i.miso_bf.flt.line7.A5SS.diff.snps.exons.vcf | python ~/mdv-protocol/to_csv.py > line6i_vs_line7i.miso_bf.flt.line7.A5SS.diff.snps.exons.csv
 
-	cd miso/cuffref-results/A3SS/comparisons/line6i_vs_line7i/bayes-factors; \
+	cd miso/results/A3SS/comparisons/line6i_vs_line7i/bayes-factors; \
 		cat line6i_vs_line7i.miso_bf.flt.line6.A3SS.diff.snps.exons.vcf | python ~/mdv-protocol/to_csv.py > line6i_vs_line7i.miso_bf.flt.line6.A3SS.diff.snps.exons.csv
 
-	cd miso/cuffref-results/A3SS/comparisons/line6i_vs_line7i/bayes-factors; \
+	cd miso/results/A3SS/comparisons/line6i_vs_line7i/bayes-factors; \
 		cat line6i_vs_line7i.miso_bf.flt.line7.A3SS.diff.snps.exons.vcf | python ~/mdv-protocol/to_csv.py > line6i_vs_line7i.miso_bf.flt.line7.A3SS.diff.snps.exons.csv
 
-	cd miso/cuffref-results/SE/comparisons/line6i_vs_line7i/bayes-factors; \
+	cd miso/results/SE/comparisons/line6i_vs_line7i/bayes-factors; \
 		cat line6i_vs_line7i.miso_bf.flt.line6.SE.diff.snps.exons.vcf | python ~/mdv-protocol/to_csv.py > line6i_vs_line7i.miso_bf.flt.line6.SE.diff.snps.exons.csv
 
-	cd miso/cuffref-results/SE/comparisons/line6i_vs_line7i/bayes-factors; \
+	cd miso/results/SE/comparisons/line6i_vs_line7i/bayes-factors; \
 		cat line6i_vs_line7i.miso_bf.flt.line7.SE.diff.snps.exons.vcf | python ~/mdv-protocol/to_csv.py > line6i_vs_line7i.miso_bf.flt.line7.SE.diff.snps.exons.csv
