@@ -1,7 +1,7 @@
 library(ggplot2)
-line7 <- read.table('line7u_vs_i.degenes.KEGG.txt',
+line7 <- read.table('results/line7u_vs_i.degenes.KEGG.txt',
                     sep="\t", header=T)
-line6 <- read.table('line6u_vs_i.degenes.KEGG.txt',
+line6 <- read.table('results/line6u_vs_i.degenes.KEGG.txt',
                     sep="\t", header=T)
 line7$sample = "Line 7"
 line6$sample = "Line 6"
@@ -26,4 +26,4 @@ ggplot(line67, aes(x=log10padjust, y=reorder(pathway, log10padjust))) +
             y="Pathway")) +
   guides(colour=FALSE)
 
-ggsave("line67_KEGG_cleveland_2.pdf")
+ggsave("results/line67_KEGG_cleveland.pdf")
