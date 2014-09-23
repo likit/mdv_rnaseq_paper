@@ -106,27 +106,35 @@ get-longest-sequences:
 	python $(protocol)/gene-rep.py line7u_vs_i.degenes.fdr.05.fa > \
 		line7u_vs_i.degenes.fdr.05.fa.longest
 
+create-gallus-blastdb:
+
+	wget ftp://ftp.ensembl.org/pub/release-73/fasta/gallus_gallus/pep/Gallus_gallus.Galgal4.73.pep.all.fa.gz
+	gunzip Gallus_gallus.Galgal4.73.pep.all.fa.gz
+	formatdb -i Gallus_gallus.Galgal4.73.pep.all.fa -o T -p T -n Gallus_prot
+
 run-blast-gallus:
 
 	cd gimme; \
-	qsub -v "db=Gallus_prot,\
+	qsub -v "db=$(projdir)/Gallus_prot,\
 		input=line6u_vs_i.degenes.fdr.05.fa.longest,program=blastx,\
 		output=line6u_vs_i.degenes.fdr.05.fa.longest.gallus.xml" \
 		$(protocol)/blast.sh
 
 	cd gimme; \
-	qsub -v "db=Gallus_prot,\
-		input=line6u_vs_i.degenes.fdr.05.fa.longest,program=blastx,\
-		output=line6u_vs_i.degenes.fdr.05.fa.longest.gallus.xml" \
+	qsub -v "db=$(projdir)/Gallus_prot,\
+		input=line7u_vs_i.degenes.fdr.05.fa.longest,program=blastx,\
+		output=line7u_vs_i.degenes.fdr.05.fa.longest.gallus.xml" \
 		$(protocol)/blast.sh
 
 get-tophits:
 
-	python protocol/get_top_hits.py line6u_vs_i.cuffref.degenes.fdr.05.fa.nucl.longest.gallus.xml \
-		> line6u_vs_i.cuffref.degenes.fdr.05.fa.nucl.tophits.txt
+	cd gimme; \
+	python $(protocol)/get_top_hits.py line6u_vs_i.degenes.fdr.05.fa.longest.gallus.xml \
+		> line6u_vs_i.degenes.fdr.05.fa.tophits.txt
 
-	python protocol/get_top_hits.py line7u_vs_i.cuffref.degenes.fdr.05.fa.nucl.longest.gallus.xml \
-		> line7u_vs_i.cuffref.degenes.fdr.05.fa.nucl.tophits.txt
+	cd gimme; \
+	python $(protocol)/get_top_hits.py line7u_vs_i.degenes.fdr.05.fa.longest.gallus.xml \
+		> line7u_vs_i.degenes.fdr.05.fa.tophits.txt
 
 miso-to-fa-se:
 
