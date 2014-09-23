@@ -28,34 +28,16 @@ retrieve_annot<-function(input, output) {
   write.table(annotated.degenes, output, sep='\t', quote=F)
 }
 
-retrieve_annot('line6u_vs_i.cuffref.degenes.fdr.05.fa.nucl.tophits.txt',
-               'line6u_vs_i.uniq.annot.degenes.txt')
-retrieve_annot('line7u_vs_i.cuffref.degenes.fdr.05.fa.nucl.tophits.txt',
-               'line7u_vs_i.uniq.annot.degenes.txt')
+retrieve_annot('results/line6u_vs_i.degenes.fdr.05.fa.tophits.txt',
+               'results/line6u_vs_i.uniq.annot.degenes.txt')
+retrieve_annot('results/line7u_vs_i.degenes.fdr.05.fa.tophits.txt',
+               'results/line7u_vs_i.uniq.annot.degenes.txt')
 
-retrieve_annot('miso/cuffref-results/SE/comparisons/line6u_vs_line6i/bayes-factors/line6u_vs_line6i.miso_bf.flt.fa.gallus.tophits.txt'
-               ,'miso/cuffref-results/SE/comparisons/line6u_vs_line6i/bayes-factors/line6u_vs_line6i.miso_bf.flt.fa.gallus.uniq.annot.miso.txt')
-retrieve_annot('miso/cuffref-results/SE/comparisons/line6u_vs_line7u/bayes-factors/line6u_vs_line7u.miso_bf.flt.fa.gallus.tophits.txt'
-               ,'miso/cuffref-results/SE/comparisons/line6u_vs_line7u/bayes-factors/line6u_vs_line7u.miso_bf.flt.fa.gallus.uniq.annot.miso.txt')
-retrieve_annot('miso/cuffref-results/SE/comparisons/line7u_vs_line7i/bayes-factors/line7u_vs_line7i.miso_bf.flt.fa.gallus.tophits.txt'
-               ,'miso/cuffref-results/SE/comparisons/line7u_vs_line7i/bayes-factors/line7u_vs_line7i.miso_bf.flt.fa.gallus.uniq.annot.miso.txt')
-retrieve_annot('miso/cuffref-results/SE/comparisons/line6i_vs_line7i/bayes-factors/line6i_vs_line7i.miso_bf.flt.fa.gallus.tophits.txt'
-               ,'miso/cuffref-results/SE/comparisons/line6i_vs_line7i/bayes-factors/line6i_vs_line7i.miso_bf.flt.fa.gallus.uniq.annot.miso.txt')
+retrieve_annot('results/line6i_vs_line7i.miso_bf.flt.fa.gallus.tophits.txt.se'
+               ,'results/line6i_vs_line7i.miso_bf.flt.fa.gallus.uniq.annot.miso.txt.se')
 
-retrieve_annot('miso/cuffref-results/A3SS/comparisons/line6u_vs_line6i/bayes-factors/line6u_vs_line6i.miso_bf.flt.fa.gallus.tophits.txt'
-               ,'miso/cuffref-results/A3SS/comparisons/line6u_vs_line6i/bayes-factors/line6u_vs_line6i.miso_bf.flt.fa.gallus.uniq.annot.miso.txt')
-retrieve_annot('miso/cuffref-results/A3SS/comparisons/line6u_vs_line7u/bayes-factors/line6u_vs_line7u.miso_bf.flt.fa.gallus.tophits.txt'
-               ,'miso/cuffref-results/A3SS/comparisons/line6u_vs_line7u/bayes-factors/line6u_vs_line7u.miso_bf.flt.fa.gallus.uniq.annot.miso.txt')
-retrieve_annot('miso/cuffref-results/A3SS/comparisons/line7u_vs_line7i/bayes-factors/line7u_vs_line7i.miso_bf.flt.fa.gallus.tophits.txt'
-               ,'miso/cuffref-results/A3SS/comparisons/line7u_vs_line7i/bayes-factors/line7u_vs_line7i.miso_bf.flt.fa.gallus.uniq.annot.miso.txt')
-retrieve_annot('miso/cuffref-results/A3SS/comparisons/line6i_vs_line7i/bayes-factors/line6i_vs_line7i.miso_bf.flt.fa.gallus.tophits.txt'
-               ,'miso/cuffref-results/A3SS/comparisons/line6i_vs_line7i/bayes-factors/line6i_vs_line7i.miso_bf.flt.fa.gallus.uniq.annot.miso.txt')
+retrieve_annot('results/line6i_vs_line7i.miso_bf.flt.fa.gallus.tophits.txt.a3ss'
+               ,'results/line6i_vs_line7i.miso_bf.flt.fa.gallus.uniq.annot.miso.txt.a3ss')
 
-#retrieve_annot('miso/cuffref-results/A5SS/comparisons/line6u_vs_line6i/bayes-factors/line6u_vs_line6i.miso_bf.flt.fa.gallus.tophits.txt'
-#               ,'miso/cuffref-results/A5SS/comparisons/line6u_vs_line6i/bayes-factors/line6u_vs_line6i.miso_bf.flt.fa.gallus.uniq.annot.miso.txt')
-retrieve_annot('miso/cuffref-results/A5SS/comparisons/line6u_vs_line7u/bayes-factors/line6u_vs_line7u.miso_bf.flt.fa.gallus.tophits.txt'
-               ,'miso/cuffref-results/A5SS/comparisons/line6u_vs_line7u/bayes-factors/line6u_vs_line7u.miso_bf.flt.fa.gallus.uniq.annot.miso.txt')
-retrieve_annot('miso/cuffref-results/A5SS/comparisons/line7u_vs_line7i/bayes-factors/line7u_vs_line7i.miso_bf.flt.fa.gallus.tophits.txt'
-               ,'miso/cuffref-results/A5SS/comparisons/line7u_vs_line7i/bayes-factors/line7u_vs_line7i.miso_bf.flt.fa.gallus.uniq.annot.miso.txt')
-retrieve_annot('miso/cuffref-results/A5SS/comparisons/line6i_vs_line7i/bayes-factors/line6i_vs_line7i.miso_bf.flt.fa.gallus.tophits.txt'
-               ,'miso/cuffref-results/A5SS/comparisons/line6i_vs_line7i/bayes-factors/line6i_vs_line7i.miso_bf.flt.fa.gallus.uniq.annot.miso.txt')
+retrieve_annot('results/line6i_vs_line7i.miso_bf.flt.fa.gallus.tophits.txt.a5ss'
+               ,'results/line6i_vs_line7i.miso_bf.flt.fa.gallus.uniq.annot.miso.txt.a5ss')

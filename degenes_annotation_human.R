@@ -1,7 +1,8 @@
 require(org.Hs.eg.db)
 
 retrieve_annot<-function(input, output) {
-  degenes.table<-read.table(input, stringsAsFactors=F, sep="\t", header=T, row.names=NULL)
+  degenes.table<-read.table(input, stringsAsFactors=F,
+                            sep="\t", header=T, row.names=NULL)
 
   # remove gene with no Ensembl ID
   degenes.table<-degenes.table[!is.na(degenes.table$geneID),]
@@ -29,32 +30,14 @@ retrieve_annot<-function(input, output) {
   write.table(annotated.degenes, output, sep='\t', quote=F)
 }
 
-retrieve_annot('line6u_vs_i.cuffref.degenes.fdr.05.fa.nucl.human.tophits.txt', 'line6u_vs_i.uniq.human.annot.degenes.txt')
-retrieve_annot('line7u_vs_i.cuffref.degenes.fdr.05.fa.nucl.human.tophits.txt', 'line7u_vs_i.uniq.human.annot.degenes.txt')
+# retrieve_annot('line6u_vs_i.cuffref.degenes.fdr.05.fa.nucl.human.tophits.txt', 'line6u_vs_i.uniq.human.annot.degenes.txt')
+# retrieve_annot('line7u_vs_i.cuffref.degenes.fdr.05.fa.nucl.human.tophits.txt', 'line7u_vs_i.uniq.human.annot.degenes.txt')
 
-retrieve_annot('miso/cuffref-results/SE/comparisons/line6u_vs_line6i/bayes-factors/line6u_vs_line6i.miso_bf.flt.fa.human.tophits.txt'
-               ,'miso/cuffref-results/SE/comparisons/line6u_vs_line6i/bayes-factors/line6u_vs_line6i.miso_bf.flt.fa.human.uniq.annot.miso.txt')
-retrieve_annot('miso/cuffref-results/SE/comparisons/line6u_vs_line7u/bayes-factors/line6u_vs_line7u.miso_bf.flt.fa.human.tophits.txt'
-               ,'miso/cuffref-results/SE/comparisons/line6u_vs_line7u/bayes-factors/line6u_vs_line7u.miso_bf.flt.fa.human.uniq.annot.miso.txt')
-retrieve_annot('miso/cuffref-results/SE/comparisons/line7u_vs_line7i/bayes-factors/line7u_vs_line7i.miso_bf.flt.fa.human.tophits.txt'
-               ,'miso/cuffref-results/SE/comparisons/line7u_vs_line7i/bayes-factors/line7u_vs_line7i.miso_bf.flt.fa.human.uniq.annot.miso.txt')
-retrieve_annot('miso/cuffref-results/SE/comparisons/line6i_vs_line7i/bayes-factors/line6i_vs_line7i.miso_bf.flt.fa.human.tophits.txt'
-               ,'miso/cuffref-results/SE/comparisons/line6i_vs_line7i/bayes-factors/line6i_vs_line7i.miso_bf.flt.fa.human.uniq.annot.miso.txt')
+retrieve_annot('results/line6i_vs_line7i.miso_bf.flt.fa.human.tophits.txt.se'
+               ,'results/line6i_vs_line7i.miso_bf.flt.fa.human.uniq.annot.miso.txt.se')
 
-retrieve_annot('miso/cuffref-results/A3SS/comparisons/line6u_vs_line6i/bayes-factors/line6u_vs_line6i.miso_bf.flt.fa.human.tophits.txt'
-               ,'miso/cuffref-results/A3SS/comparisons/line6u_vs_line6i/bayes-factors/line6u_vs_line6i.miso_bf.flt.fa.human.uniq.annot.miso.txt')
-retrieve_annot('miso/cuffref-results/A3SS/comparisons/line6u_vs_line7u/bayes-factors/line6u_vs_line7u.miso_bf.flt.fa.human.tophits.txt'
-               ,'miso/cuffref-results/A3SS/comparisons/line6u_vs_line7u/bayes-factors/line6u_vs_line7u.miso_bf.flt.fa.human.uniq.annot.miso.txt')
-retrieve_annot('miso/cuffref-results/A3SS/comparisons/line7u_vs_line7i/bayes-factors/line7u_vs_line7i.miso_bf.flt.fa.human.tophits.txt'
-               ,'miso/cuffref-results/A3SS/comparisons/line7u_vs_line7i/bayes-factors/line7u_vs_line7i.miso_bf.flt.fa.human.uniq.annot.miso.txt')
-retrieve_annot('miso/cuffref-results/A3SS/comparisons/line6i_vs_line7i/bayes-factors/line6i_vs_line7i.miso_bf.flt.fa.human.tophits.txt'
-               ,'miso/cuffref-results/A3SS/comparisons/line6i_vs_line7i/bayes-factors/line6i_vs_line7i.miso_bf.flt.fa.human.uniq.annot.miso.txt')
+retrieve_annot('results/line6i_vs_line7i.miso_bf.flt.fa.human.tophits.txt.a3ss'
+               ,'results/line6i_vs_line7i.miso_bf.flt.fa.human.uniq.annot.miso.txt.a3ss')
 
-retrieve_annot('miso/cuffref-results/A5SS/comparisons/line6u_vs_line6i/bayes-factors/line6u_vs_line6i.miso_bf.flt.fa.human.tophits.txt'
-               ,'miso/cuffref-results/A5SS/comparisons/line6u_vs_line6i/bayes-factors/line6u_vs_line6i.miso_bf.flt.fa.human.uniq.annot.miso.txt')
-retrieve_annot('miso/cuffref-results/A5SS/comparisons/line6u_vs_line7u/bayes-factors/line6u_vs_line7u.miso_bf.flt.fa.human.tophits.txt'
-               ,'miso/cuffref-results/A5SS/comparisons/line6u_vs_line7u/bayes-factors/line6u_vs_line7u.miso_bf.flt.fa.human.uniq.annot.miso.txt')
-retrieve_annot('miso/cuffref-results/A5SS/comparisons/line7u_vs_line7i/bayes-factors/line7u_vs_line7i.miso_bf.flt.fa.human.tophits.txt'
-               ,'miso/cuffref-results/A5SS/comparisons/line7u_vs_line7i/bayes-factors/line7u_vs_line7i.miso_bf.flt.fa.human.uniq.annot.miso.txt')
-retrieve_annot('miso/cuffref-results/A5SS/comparisons/line6i_vs_line7i/bayes-factors/line6i_vs_line7i.miso_bf.flt.fa.human.tophits.txt'
-               ,'miso/cuffref-results/A5SS/comparisons/line6i_vs_line7i/bayes-factors/line6i_vs_line7i.miso_bf.flt.fa.human.uniq.annot.miso.txt')
+retrieve_annot('results/line6i_vs_line7i.miso_bf.flt.fa.human.tophits.txt.a5ss'
+               ,'results/line6i_vs_line7i.miso_bf.flt.fa.human.uniq.annot.miso.txt.a5ss')
