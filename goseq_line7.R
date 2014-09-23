@@ -3,7 +3,7 @@ library(org.Gg.eg.db)
 library(KEGG.db)
 library(biomaRt)
 
-degenes.table<-read.table('line7u_vs_i.cuffref.degenes.fdr.05.fa.nucl.tophits.txt',
+degenes.table<-read.table('results/line7u_vs_i.degenes.fdr.05.fa.tophits.txt',
                           stringsAsFactors=F, sep="\t", header=T)
 
 # remove gene with no Ensembl ID
@@ -59,16 +59,20 @@ get_genes_kegg = function(cat, data, prefix)
 {
     m = match(xx[[cat]], data$ENTREZID)
     mm = m[!is.na(m)]
-    d = data.frame(cat, data[mm, ]$id, data[mm,]$geneID, data[mm,]$ENTREZID, data[mm,]$SYMBOL)
+    d = data.frame(cat, data[mm, ]$id,
+                   data[mm,]$geneID, data[mm,]$ENTREZID, data[mm,]$SYMBOL)
 
     filename = paste(prefix, cat, sep="_")
     write.table(d, filename, sep="\t", row.names=F, col.names=F, quote=F)
     return(d)
 }
-df = lapply(KEGG_SIG$category, get_genes_kegg, uniq.annotated.degenes, "line7_goseq_KEGG_genes")
+df = lapply(KEGG_SIG$category,
+            get_genes_kegg, uniq.annotated.degenes,
+            "results/line7_goseq_KEGG_genes")
 
 # Get number of genes in each pathway
 #KEGG_SIG$ngenes = sapply(df, nrow) # get a number of genes from each category
 
 # Writing pathway information to a file
-write.table(KEGG_SIG, 'line7u_vs_i.degenes.KEGG.txt', sep='\t', row.names=F, quote=F)
+write.table(KEGG_SIG, 'results/line7u_vs_i.degenes.KEGG.txt',
+            sep='\t', row.names=F, quote=F)

@@ -4,7 +4,7 @@ library(KEGG.db)
 library(biomaRt)
 
 degenes.table<-read.table(
-          'line6u_vs_i.cuffref.degenes.fdr.05.fa.nucl.tophits.txt',
+          'results/line6u_vs_i.degenes.fdr.05.fa.tophits.txt',
           stringsAsFactors=F, sep="\t", header=T
           )
 
@@ -84,11 +84,11 @@ get_genes_kegg = function(cat, data, prefix)
 
 df = lapply(KEGG_SIG$category,
                 get_genes_kegg, uniq.annotated.degenes,
-                "line6_goseq_KEGG_genes"
+                "results/line6_goseq_KEGG_genes"
                 )
 
 # Writing pathway information to a file
 write.table(KEGG_SIG,
-                'line6u_vs_i.degenes.KEGG.txt',
+                'results/line6u_vs_i.degenes.KEGG.txt',
                 sep='\t', row.names=F, quote=F
                 )
