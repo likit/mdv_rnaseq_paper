@@ -26,16 +26,28 @@ Required software
 
 #Protocol
 
-This protocol is only tested on MSU HPC computer cluster.
+This protocol has been tested on MSU HPC computer cluster only.
 More info about the system can be found at https://icer.msu.edu/hpcc.
+
+###Download scripts and Gimme
+
+    git clone https://github.com/likit/mdv_rnaseq_paper.git mdv-protocol
+    wget https://github.com/likit/gimme/archive/v.0.98.tar.gz
+    tar xvfz v.0.98.tar.gz
+    mv v.0.98 gimme
 
 ###Setup paths
 
-    export PROTOCOL=<path to the protocol>
-    export GIMMEDIR=<path to Gimme>
+    # please change these paths accordingly
+    export PROTOCOL=mdv-protocol
+    export GIMMEDIR=gimme
 
 Create a working directory and run all the following commands inside the
 directory.
+
+    # please change the path accordingly
+    mkdir mdv-project
+    cd mdv-project
 
 ###Acquire gene models and some prerequisite data
 
@@ -93,6 +105,7 @@ Create Gallus gallus BLAST database:
 Annotate sequences with chicken ENSEMBL genes
 
     make -f $PROTOCOL/makefile protocol=$PROTOCOL projdir=$PWD run-blast-gallus
+    make -f $PROTOCOL/makefile protocol=$PROTOCOL projdir=$PWD get-tophits
 
 ###MISO analysis
 
@@ -170,3 +183,4 @@ Copy data
 Get gene info from chicken and human annotation
 
     cd mdvproj; make -f $PROTOCOL/analysis.mk annotate
+    cd mdvproj; make -f $PROTOCOL/analysis.mk run-kegg
