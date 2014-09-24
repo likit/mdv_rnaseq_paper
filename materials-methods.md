@@ -11,7 +11,7 @@ paired-end libraries.  Reads were quality trimmed by Condetri 2.1
 with quality score cutoff of 30.  The first 10 bases were removed
 due to non-uniform distribution of nucleotides.
 
-##Gene model construction}
+##Gene model construction
 
 Due to lack of complete gene models for chickens, we employed two
 methods to construct gene models from RNA-Seq reads.  First,
@@ -52,7 +52,7 @@ Splicing events with Bayes factor $>10$ and delta Psi>0.20 were
 considered significant.  Read coverages and Psi distributions
 were plotted using Sashimi plot.
 
-##Variant calling and {\em in silico} splicing analysis
+##Variant calling and __in silico__ splicing analysis
 
 Variants were called using mpileup command from
 SAMTools/0.1.18 and
@@ -61,7 +61,7 @@ mutation analyses.  Exon enhancers and suppressors were predicted
 using the Human Splicing Finder web portal.  Human default
 parameter settings were used in all analyses. 
 
-##Protein domains search}
+##Protein domains search
 
 Transcripts were translated to protein sequences using ESTScan
 3.0.3 with chicken HMM matrices built from chicken cDNAs and
