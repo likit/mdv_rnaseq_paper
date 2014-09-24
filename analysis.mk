@@ -5,8 +5,8 @@ annotate:
 
 run-kegg:
 
-	# Rscript $(protocol)/goseq_line6.R
-	# Rscript $(protocol)/goseq_line7.R
+	Rscript $(protocol)/goseq_line6.R
+	Rscript $(protocol)/goseq_line7.R
 	Rscript $(protocol)/make_kegg_cleveland_plot.R
 
 run-bp-ontology:

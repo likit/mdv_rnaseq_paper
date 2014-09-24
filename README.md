@@ -54,8 +54,11 @@ directory.
 Please consult https://github.com/likit/RNASeq-methods-comparison
 protocol on how to build Gimme models.
 
-    wget http://athyra.ged.msu.edu/~preeyano/gene-network/pipeline/gimme/gimme.*
     wget http://athyra.ged.msu.edu/~preeyano/gene-network/pipeline/gal4selected*
+
+    mkdir gimme
+    wget http://athyra.ged.msu.edu/~preeyano/gene-network/pipeline/gimme/gimme.*
+    mv gimme* gimme/
 
 ###Prepare the reference genome
 
@@ -68,13 +71,17 @@ a dictionary required for a SNP analysis using GATK.
 
 Get reads
 
+    mkdir reads
+    cd reads
     wget http://athyra.ged.msu.edu/~preeyano/mdv/paired-end/*
     wget http://athyra.ged.msu.edu/~preeyano/mdv/single-end/*
+    for f in *.gz; gunzip $f; done
+    cd -
 
 Quality trim
 
-    make -f $PROTOCOL/misc.mk protocol=$PROTOCOL run-quality-trim-pe
-    make -f $PROTOCOL/misc.mk protocol=$PROTOCOL run-quality-trim-se
+    make -f $PROTOCOL/makefile protocol=$PROTOCOL run-quality-trim-pe
+    make -f $PROTOCOL/makefile protocol=$PROTOCOL run-quality-trim-se
 
 ###Run DE analysis
 
