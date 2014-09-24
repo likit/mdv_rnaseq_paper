@@ -19,7 +19,7 @@ Required software
 + Velvet 1.2.03
 + Oases 0.2.06
 + BLAST+ 2.2.25
-+ MISO 0.49
++ MISO 0.4.9
 + GATK 2.5.2
 + PicardTools 1.113
 + Samtools 0.1.19
@@ -163,14 +163,24 @@ Annotate protein domains
 
     make -f $PROTOCOL/miso.mk protocol=$PROTOCOL annotate-domains-se annotate-domains-a3ss annotate-domains-a5ss
 
-MISO to KEGG
-
-    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL miso-to-kegg-se miso-to-kegg-a3ss miso-to-kegg-a5ss
-
 Find DEU snps
 
     make -f $PROTOCOL/miso.mk protocol=$PROTOCOL miso-snps-se miso-snps-a3ss miso-snps-a5ss
     make -f $PROTOCOL/miso.mk protocol=$PROTOCOL projpath=$PWD find-deu-snps-se find-deu-snps-a3ss find-deu-snps-a5ss
+
+Annotate-miso:
+
+    make -f $PROTOCOL/miso.mk protocol=$PROTOCOL annotate-miso-se annotate-miso-a3ss annotate-miso-a5ss
+
+Plot ITGB2 and PFN2 genes.
+
+    plot.py --plot-event=chr7-24308.ev1 miso/indexes/SE \
+    ~/mdv-protocol/sashimi_plot_settings_SE.txt \
+    --plot-title=ITGB2 --output-dir=miso/results/plots
+
+    plot.py --plot-event=chr9-25729.ev1 miso/indexes/A3SS \
+    ~/mdv-protocol/sashimi_plot_settings_A3SS.txt \
+    --plot-title=PFN2 --output-dir=miso/results/plots
 
 ###Run the actual analysis
 
@@ -184,3 +194,6 @@ Get gene info from chicken and human annotation
 
     cd mdvproj; make -f $PROTOCOL/analysis.mk annotate
     cd mdvproj; make -f $PROTOCOL/analysis.mk run-kegg
+
+Now you should launch the IPython notebook server and interactively run the all
+cells in the notebook.

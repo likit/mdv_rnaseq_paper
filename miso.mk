@@ -587,7 +587,7 @@ domains-to-bigBed-a5ss:
 		$(protocol)/gal4.chrom.sizes \
 		line6i_vs_line7i.miso_bf.flt.faa.domains.annots.bigBed.bb
 
-miso-to-kegg-se:
+annotate-miso-se:
 
 	cd miso/results/SE/comparisons/line6i_vs_line7i/bayes-factors; \
 		python $(protocol)/get_top_hits.py line6i_vs_line7i.miso_bf.flt.fa.gallus.xml > \
@@ -595,7 +595,7 @@ miso-to-kegg-se:
 		python $(protocol)/get_top_hits.py line6i_vs_line7i.miso_bf.flt.fa.human.xml > \
 		line6i_vs_line7i.miso_bf.flt.fa.human.tophits.txt
 
-miso-to-kegg-a3ss:
+annotate-miso-a3ss:
 
 	cd miso/results/A3SS/comparisons/line6i_vs_line7i/bayes-factors; \
 		python $(protocol)/get_top_hits.py line6i_vs_line7i.miso_bf.flt.fa.gallus.xml > \
@@ -603,7 +603,7 @@ miso-to-kegg-a3ss:
 		python $(protocol)/get_top_hits.py line6i_vs_line7i.miso_bf.flt.fa.human.xml > \
 		line6i_vs_line7i.miso_bf.flt.fa.human.tophits.txt
 
-miso-to-kegg-a5ss:
+annotate-miso-a5ss:
 
 	cd miso/results/A5SS/comparisons/line6i_vs_line7i/bayes-factors; \
 		python $(protocol)/get_top_hits.py line6i_vs_line7i.miso_bf.flt.fa.gallus.xml > \
