@@ -48,7 +48,7 @@ Gene models were converted to alternative splicing models using a
 Python script.  In order to increase sensitivity, read counts
 from single- and paired-end samples were combined and treated as
 single-end reads for splicing event analysis with MISO/0.4.9.
-Splicing events with Bayes factor $>10$ and delta Psi>0.20 were
+Splicing events with Bayes factor (BF)>10 and delta Psi>0.20 were
 considered significant.  Read coverages and Psi distributions
 were plotted using Sashimi plot.
 
